@@ -20,7 +20,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../config.php');
+require_once(__DIR__ . '/../../config.php');//zalacznie moodle
 
 global $DB;
 
@@ -28,22 +28,31 @@ require_login();
 $context = context_system::instance();
 require_capability('local/message:managemessages', $context);
 
-$PAGE->set_url(new moodle_url('/local/message/manage.php'));
-$PAGE->set_context(\context_system::instance());
+$PAGE->set_url(new moodle_url('/local/message/manage.php'));//przypisanie tego pliku do url moodle
+$PAGE->set_context(\context_system::instance());//njprwd kontekst moodle- njprwd zasieg wtyczki - tutaj njprwd zasieg system - ogolny
 $PAGE->set_title(get_string('manage_messages', 'local_message'));
 $PAGE->set_heading(get_string('manage_messages', 'local_message'));
 $PAGE->requires->js_call_amd('local_message/confirm');
-$PAGE->requires->css('/local/message/styles.css');
+$PAGE->requires->css('/local/message/styles.css');//zalaczenie css do wtyczki
 
 $messages = $DB->get_records('local_message', null, 'id');
 
-echo $OUTPUT->header();
+/**
+ * njprwd czesc front end
+ */
+echo $OUTPUT->header();//njprwd zalaczenie naglowka wtyczki
+
 $templatecontext = (object)[
     'messages' => array_values($messages),
     'editurl' => new moodle_url('/local/message/edit.php'),
     'bulkediturl' => new moodle_url('/local/message/bulkedit.php'),
 ];
-
+// ponizej wsk na sciezke oraz zmienna z jakiej ma byc rendrerowana tyresc front end wtyczki
 echo $OUTPUT->render_from_template('local_message/manage', $templatecontext);
 
 echo $OUTPUT->footer();
+
+/**
+ * njprwd czesc koniec front end
+ */
+

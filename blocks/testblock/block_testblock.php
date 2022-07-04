@@ -48,34 +48,14 @@ class block_testblock extends block_base
         }
 
 
-        $showCourses = get_config('block_testblock', 'showcourses');
+        //get useres from DB
 
-        if ($showCourses) {
+        //get courses courses
+        $content = '';
+        $courses = $DB->get_records('course');
 
-
-            //get useres from DB
-
-            //get courses courses
-            $content = '';
-            $courses = $DB->get_records('course');
-
-            foreach ($courses as $course) {
-                $content .= $course->fullname . '<br>';
-            }
-
-        } else {
-
-
-            $content = '';
-            $users = $DB->get_records('user');
-
-            foreach ($users as $user) {
-                $content .= $user->firstname . '  ' . $user->lastname . '<br>';
-            }
-
-
-
-
+        foreach ($courses as $course) {
+            $content .= $course->fullname . '<br>';
         }
 
         $this->content = new stdClass;
