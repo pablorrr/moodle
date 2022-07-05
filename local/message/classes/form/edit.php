@@ -24,7 +24,11 @@
 namespace local_message\form;
 use moodleform;
 
-require_once("$CFG->libdir/formslib.php");
+/**
+ *  form handle
+ */
+require_once("$CFG->libdir/formslib.php");//zalacznie biblioteki formularzy vfg - njprwd odniesinie do pliku config
+
 
 class edit extends moodleform {
     //Add elements to form
@@ -33,20 +37,32 @@ class edit extends moodleform {
         $mform = $this->_form; // Don't forget the underscore!
 
         $mform->addElement('hidden', 'id');
+
+        /** setType
+         * Should be used for all elements of a form except for select, radio and checkboxes which
+         * clean their own data.
+         *
+         * @param string $elementname
+         * @param int $paramtype defines type of data contained in element. Use the constants PARAM_*.
+         *        {@link lib/moodlelib.php} for defined parameter types
+         */
         $mform->setType('id', PARAM_INT);
+
         $mform->addElement('text', 'messagetext', get_string('message_text', 'local_message')); // Add elements to your form
+
         $mform->setType('messagetext', PARAM_NOTAGS);                   //Set type of element
         $mform->setDefault('messagetext', get_string('enter_message', 'local_message'));        //Default value
 
-        $choices = array();
+        $choices = array();//tablica listy rozwijalnej selekt
         $choices['0'] = \core\output\notification::NOTIFY_WARNING;
         $choices['1'] = \core\output\notification::NOTIFY_SUCCESS;
         $choices['2'] = \core\output\notification::NOTIFY_ERROR;
         $choices['3'] = \core\output\notification::NOTIFY_INFO;
+
         $mform->addElement('select', 'messagetype', get_string('message_type', 'local_message'), $choices);
         $mform->setDefault('messagetype', '3');
 
-        $this->add_action_buttons();
+        $this->add_action_buttons();//add save cancel buttons
     }
     //Custom validation should be added here
     function validation($data, $files) {

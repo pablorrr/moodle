@@ -20,7 +20,10 @@
  * @package   local_message
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
+/**
+ *  njprwd powiazanie z internacjonalizacja moodle
+ * indexy tablic njpwrd san arguemntami get_string todo sprawdz to!!!
+ */
 $string['pluginname'] = 'Broadcast messages';
 $string['enter_message'] = 'Please enter a message';
 $string['manage'] = 'Manage broadcast messages';

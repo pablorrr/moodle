@@ -23,46 +23,77 @@
 use local_message\form\bulkedit;
 use local_message\manager;
 
+/**
+ * bulk editor - menu rozwijalne do masowych zastosowan przy edycji w formualrzu wtyczki
+ *
+ * scisle powiwazaznie z drugim plik bulk edit w classes / form
+ */
 require_once(__DIR__ . '/../../config.php');
-
+/**
+ *  This function checks that the current user is logged in and has the
+ * required privileges
+ */
 require_login();
+
+/**
+ * kontekst i zasueg wtyczki tutaj njprwd oglonosdostepny w w moodle
+ */
 $context = context_system::instance();
+
+/**
+ * check if user  has possibility to use plugin
+ */
 require_capability('local/message:managemessages', $context);
-
-$PAGE->set_url(new moodle_url('/local/message/bulkedit.php'));
+//https://docs.moodle.org/dev/Page_API#.24PAGE_The_Moodle_page_global
+// $PAGE służy do konfiguracji strony, a $OUTPUT służy do wyświetlania strony
+$PAGE->set_url(new moodle_url('/local/message/bulkedit.php'));//create  access uri
 $PAGE->set_context(\context_system::instance());
-$PAGE->set_title(get_string('bulk_edit', 'local_message'));
-$PAGE->set_heading(get_string('bulk_edit_messages', 'local_message'));
-
+//get_string - njpwd internacjpnalizacja
+$PAGE->set_title(get_string('bulk_edit', 'local_message'));//setes title of the page
+//zalaczenie html powyzej <body>
+$PAGE->set_heading(get_string('bulk_edit_messages', 'local_message'));//zalaczenie nagłówka
+/**
+ * do ndanaia wartosci parametrom przesylanym przez post  i get
+ */
 $messageid = optional_param('messageid', null, PARAM_INT);
 
 // We want to display our form.
-$mform = new bulkedit();
-$manager = new manager();
+$mform = new bulkedit();//custom class defined in plugin
+$manager = new manager();//custom class defined in plugin
 
-if ($mform->is_cancelled()) {
+if ($mform->is_cancelled()) {//do when  cancel button is clicked, is canceled native moodle function
     // Go back to manage.php page
+    //$CFG - moodel  global var built in , referring to config file
     redirect($CFG->wwwroot . '/local/message/manage.php', get_string('cancelled_form', 'local_message'));
-} else if ($fromform = $mform->get_data()) {
-    $messages = $fromform->messages;
+
+    /**
+     *  get_data() -Return submitted data if properly submitted or returns NULL if validation fails or
+     * if there is no submitted data.
+     */
+} else if ($fromform = $mform->get_data()) {//if form is submitted
+    $messages = $fromform->messages;//pobranie  wodomosci z przeslanego formualrza
     $messageids = [];
     foreach ($messages as $key => $enabled) {
         if ($enabled == true) {
-            $messageids[] = substr($key, 9);
+            $messageids[] = substr($key, 9);//njpwrd tworzenie tablicy z id messages tworzonychz apomoca substringu liczby
         }
     }
-
+    //if (is_array($messageids)) {
     if ($messageids) {
-        if ($fromform->deleteall == true) {
-            $manager->delete_messages($messageids);
-        } else {
+        if ($fromform->deleteall == true) {//njprwd gdy checkbox
+            $manager->delete_messages($messageids);//usun wiaodmosci z metody pluginu
+        } else {//gdy message nie istniaja aktualizuj je
             $manager->update_messages($messageids, $fromform->messagetype);
         }
     }
-
+//redirect with return message
     redirect($CFG->wwwroot . '/local/message/manage.php', get_string('bulk_edit_successful', 'local_message'));
 }
-
-echo $OUTPUT->header();
-$mform->display();
-echo $OUTPUT->footer();
+/**
+ * fornt end part
+ * $OUTPUT - moddel supert global var for echoing fornt end plugin content
+ *
+ */
+echo $OUTPUT->header();//echoing header
+$mform->display();//display plugin form content
+echo $OUTPUT->footer();//echoing footer

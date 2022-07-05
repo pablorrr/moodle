@@ -1,4 +1,10 @@
 <?php
+
+//https://docs.moodle.org/dev/Web_services_API
+/**
+ * deklarowanie  funkcji metod wtyczki ktpre sa udostepniane jakousluga sieciowa
+ * jest rodzaj API wtyczki dokontaktu z innymi aplikacajmi zewnwtrznymi
+ */
 $functions = array(
     'local_message_delete_message' => array(         //web service function name
         'classname'   => 'local_message_external',  //class containing the external function OR namespaced class in classes/external/XXXX.php

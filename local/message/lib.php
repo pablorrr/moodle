@@ -23,7 +23,7 @@ use local_message\manager;
 
 function local_message_before_footer() {
     global $USER;
-
+//njprwd przerwij gdy wtyczka wylaczona
     if (!get_config('local_message', 'enabled')) {
         return;
     }
@@ -32,7 +32,7 @@ function local_message_before_footer() {
     $messages = $manager->get_messages($USER->id);
 
     foreach ($messages as $message) {
-        $type = \core\output\notification::NOTIFY_INFO;
+        $type = \core\output\notification::NOTIFY_INFO;//odniesienie do ntyfikacji
         if ($message->messagetype === '0') {
             $type = \core\output\notification::NOTIFY_WARNING;
         }

@@ -26,6 +26,11 @@ namespace local_message;
 use dml_exception;
 use stdClass;
 
+/**
+ * pobabaly  main class
+ *
+ *
+ */
 class manager {
 
     /** Insert the data into our database table.
@@ -36,12 +41,19 @@ class manager {
     public function create_message(string $message_text, string $message_type): bool
     {
         global $DB;
+        /**
+         * The stdClass is the empty class in PHP which is used to cast other types to object.
+         * It is similar to Java or Python object. The stdClass is not the base class of the objects.
+         * If an object is converted to object, it is not modified
+         *
+         * std class wirtualn klasa wbud w php - uzywanie przy konwersji np tablicy do obiektu
+         */
         $record_to_insert = new stdClass();
-        $record_to_insert->messagetext = $message_text;
+        $record_to_insert->messagetext = $message_text;//add new attr to class dynamically
         $record_to_insert->messagetype = $message_type;
         try {
-            return $DB->insert_record('local_message', $record_to_insert, false);
-        } catch (dml_exception $e) {
+            return $DB->insert_record('local_message', $record_to_insert, false);//inser record to DB
+        } catch (dml_exception $e) {//dml exception moodle exeption class
             return false;
         }
     }
@@ -52,6 +64,11 @@ class manager {
      */
     public function get_messages(int $userid): array
     {
+        /**
+         * sleekcja ilku kolumn z dwoch tabel lmr i lm
+         *  wyslelecjonuj te  kolumny w kotrych id jest zbiezne z tabela lm
+         *
+         */
         global $DB;
         $sql = "SELECT lm.id, lm.messagetext, lm.messagetype 
             FROM {local_message} lm 
@@ -61,7 +78,7 @@ class manager {
             'userid' => $userid,
         ];
         try {
-            return $DB->get_records_sql($sql, $params);
+            return $DB->get_records_sql($sql, $params);//pobranie rekordow zgodnych z instr sql
         } catch (dml_exception $e) {
             // Log error here.
             return [];
@@ -80,6 +97,8 @@ class manager {
      * @param int $message_id the message to mark as read
      * @param int $userid the user that we are marking message read
      * @return bool true if successful
+     *
+     * njprwd wstawianie do tabeli lmr tych msg oznacoznych jako przeczytane
      */
     public function mark_message_read(int $message_id, int $userid): bool
     {
@@ -87,7 +106,7 @@ class manager {
         $read_record = new stdClass();
         $read_record->messageid = $message_id;
         $read_record->userid = $userid;
-        $read_record->timeread = time();
+        $read_record->timeread = time();//stempel czasowy
         try {
             return $DB->insert_record('local_message_read', $read_record, false);
         } catch (dml_exception $e) {
@@ -127,7 +146,16 @@ class manager {
     public function update_messages(array $messageids, $type): bool
     {
         global $DB;
-        list($ids, $params) = $DB->get_in_or_equal($messageids);
+        //list - fast create pair of var and values using array
+        /**
+         * get_in_or_equal - built in moodle - tworzy kwerendy do DB typu:
+         * SELECT * FROM Customers
+        WHERE Country IN ('Germany', 'France', 'UK');
+         *
+         * tutaj: zwroci tablice wartosci tych kolumn w ktorych sa meeseids
+         */
+        list($ids, $params) = $DB->get_in_or_equal($messageids);//(array)
+        //set filedselect njprwd tworzy nowe pola o nazwie mesage typie wsedzie tam gdzie dopasowane jest zapytanie sql
         return $DB->set_field_select('local_message', 'messagetype', $type, "id $ids", $params);
     }
 
@@ -140,11 +168,24 @@ class manager {
     public function delete_message($messageid)
     {
         global $DB;
-        $transaction = $DB->start_delegated_transaction();
-        $deletedMessage = $DB->delete_records('local_message', ['id' => $messageid]);
+        /**
+         * W bazach danych, które to obsługują, przełącz się w tryb transakcyjny i rozpocznij transakcję
+         * https://www.youtube.com/watch?v=Mnwow8ZoPrM
+         * https://docs.moodle.org/dev/DB_layer_2.0_delegated_transactions
+         *
+         * Transakce to zbior operacje typu CRUD - insert, update delete
+         * sciesle powiazenie z :
+         *
+         * Data Manipulation Language lub DML to podzbiór operacji służący do wstawiania, usuwania i aktualizowania danych w bazie danych.
+         * DML jest często podjęzykiem bardziej rozbudowanego języka, takiego jak SQL; DML zawiera niektóre operatory w języku
+         *
+         *
+         */
+        $transaction = $DB->start_delegated_transaction();//rozpocznij oddelelgowane rttansakcje??
+        $deletedMessage = $DB->delete_records('local_message', ['id' => $messageid]);//delete recored from db with selected ids
         $deletedRead = $DB->delete_records('local_message_read', ['messageid' => $messageid]);
-        if ($deletedMessage && $deletedRead) {
-            $DB->commit_delegated_transaction($transaction);
+        if ($deletedMessage && $deletedRead) {//jesli rekoredy poprwanie ususniete
+            $DB->commit_delegated_transaction($transaction);//zatwerdzenie transkacji w db njpwrd uzycie sql commit w instrukcji wykonania
         }
         return true;
     }
@@ -157,11 +198,12 @@ class manager {
     {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
+        //get_in_or_equal -
         list($ids, $params) = $DB->get_in_or_equal($messageids);
-        $deletedMessages = $DB->delete_records_select('local_message', "id $ids", $params);
+        $deletedMessages = $DB->delete_records_select('local_message', "id $ids", $params);//usun wybrane rekordy
         $deletedReads = $DB->delete_records_select('local_message_read', "messageid $ids", $params);
         if ($deletedMessages && $deletedReads) {
-            $DB->commit_delegated_transaction($transaction);
+            $DB->commit_delegated_transaction($transaction);//zatwerdzenie transakcji
         }
         return true;
     }

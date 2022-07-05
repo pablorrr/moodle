@@ -38,11 +38,11 @@ $messageid = optional_param('messageid', null, PARAM_INT);
 // We want to display our form.
 $mform = new edit();
 
-if ($mform->is_cancelled()) {
+if ($mform->is_cancelled()) {//after  cancel form button clicking redirect to the maanage page
     // Go back to manage.php page
     redirect($CFG->wwwroot . '/local/message/manage.php', get_string('cancelled_form', 'local_message'));
 
-} else if ($fromform = $mform->get_data()) {
+} else if ($fromform = $mform->get_data()) {//do this after submit form
     $manager = new manager();
 
     if ($fromform->id) {
