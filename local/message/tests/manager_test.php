@@ -27,6 +27,9 @@ use local_message\manager;
 global $CFG;
 require_once($CFG->dirroot . '/local/message/lib.php');
 
+/**
+ * probably moustache internal php uni test system
+ */
 class local_message_manager_test extends advanced_testcase
 {
     /**

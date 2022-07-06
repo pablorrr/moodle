@@ -2,8 +2,8 @@
 
 //https://docs.moodle.org/dev/Web_services_API
 /**
- * deklarowanie  funkcji metod wtyczki ktpre sa udostepniane jakousluga sieciowa
- * jest rodzaj API wtyczki dokontaktu z innymi aplikacajmi zewnwtrznymi
+ * deklarowanie  funkcji metod wtyczki ktore sa udostepniane jako usluga sieciowa
+ * jest rodzaj API wtyczki do kontaktu z innymi aplikacajmi zewnwtrznymi
  */
 $functions = array(
     'local_message_delete_message' => array(         //web service function name

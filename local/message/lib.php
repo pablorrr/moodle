@@ -32,7 +32,7 @@ function local_message_before_footer() {
     $messages = $manager->get_messages($USER->id);
 
     foreach ($messages as $message) {
-        $type = \core\output\notification::NOTIFY_INFO;//odniesienie do ntyfikacji
+        $type = \core\output\notification::NOTIFY_INFO;//odniesienie do powiadomien
         if ($message->messagetype === '0') {
             $type = \core\output\notification::NOTIFY_WARNING;
         }

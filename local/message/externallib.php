@@ -13,6 +13,10 @@ defined('MOODLE_INTERNAL') || die();
 use local_message\manager;
 require_once($CFG->libdir . "/externallib.php");
 
+/**
+ * njpwrd jest to biblioteka z funkcjami ktrre mozna stosowac w kontekscie API wttyczki
+ *
+ */
 class local_message_external extends external_api  {
     /**
      * Returns description of method parameters

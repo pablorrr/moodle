@@ -22,7 +22,7 @@
  */
 /**
  *  njprwd powiazanie z internacjonalizacja moodle
- * indexy tablic njpwrd san arguemntami get_string todo sprawdz to!!!
+ * indexy tablic  sa arguemntami get_string
  */
 $string['pluginname'] = 'Broadcast messages';
 $string['enter_message'] = 'Please enter a message';

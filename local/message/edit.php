@@ -24,7 +24,10 @@ use local_message\form\edit;
 use local_message\manager;
 
 require_once(__DIR__ . '/../../config.php');
-
+/**
+ * edit message template , associate with same named class
+ *
+ */
 require_login();
 $context = context_system::instance();
 require_capability('local/message:managemessages', $context);
