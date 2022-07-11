@@ -27,7 +27,7 @@ class form  extends moodleform {
         $mform = $this->_form; // Don't forget the underscore!
         $maxbytes =  5000000;
         $mform->addElement('filepicker', 'userfile', get_string('file'), null,
-            array('maxbytes' => $maxbytes, 'accepted_types' => '*'));
+            array('maxbytes' => $maxbytes, 'accepted_types' => 'csv'));
 
 
     }
