@@ -67,14 +67,16 @@ Kierownik działu : jest to kierownik dowolnej osoby z niższego działu lub pod
     if (!$dbman->field_exists($table, $position_id_field)) {
       //  $dbman->add_field($table, $position_id_field);
         $table->add_field('position_id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
-        $table->add_key('foreignkey1', XMLDB_KEY_FOREIGN, array('position_id'), 'position', array('id'));
+        $table->add_key('position_id', XMLDB_KEY_FOREIGN, array('position_id'), 'position', array('id'));
 
     }
 
     $organizational_unit_id_field = new xmldb_field('organizational_unit_id');
     
     if (!$dbman->field_exists($table, $organizational_unit_id_field)) {
-        $dbman->add_field($table, $organizational_unit_id_field);
+        //todo chanege it
+        $table->add_field('position_id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+        $table->add_key('position_id', XMLDB_KEY_FOREIGN, array('position_id'), 'position', array('id'));
     }
 
 
