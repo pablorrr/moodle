@@ -15,7 +15,7 @@
     <TABLE NAME="position" COMMENT="Default comment for the table, please edit me">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="position_id" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+       
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
