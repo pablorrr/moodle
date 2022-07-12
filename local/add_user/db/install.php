@@ -27,7 +27,6 @@ function xmldb_local_add_user_install()
     $position_id_field = new xmldb_field('position_id'); 
 
     if (!$dbman->field_exists($table, $position_id_field)) {
-      //  $dbman->add_field($table, $position_id_field);
         $table->add_field('position_id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
         $table->add_key('position_id', XMLDB_KEY_FOREIGN, array('position_id'), 'position', array('id'));
 
@@ -41,5 +40,15 @@ function xmldb_local_add_user_install()
         $table->add_key('organizational_unit_id', XMLDB_KEY_FOREIGN, array('organizational_unit_id'), 'organizational_unit', array('id'));
     }
 
+
+    $table = new xmldb_table('user');
+    $employee_number = new xmldb_field('employee_number');
+
+    if (!$dbman->field_exists($table,  $employee_number)) {
+
+        $table->add_field('employee_number', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+     
+    }
+//employee_number
 }
 
