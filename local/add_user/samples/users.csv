@@ -1,0 +1,4 @@
+username,email,firstname,lastname,employee_number,organizational_unit,position
+Warrior,johnrambo@gmail.com,John,Rambo,1,IT,manager
+Boxer,rockybalboa@gmail.com,Rocky,Balboa,2,HR,manager
+Termionator,arnoldswarzeneger@gmail.com,Arnie,Swarzeneger,3,PR,manager
