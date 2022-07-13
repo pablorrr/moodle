@@ -31,7 +31,7 @@ global $DB;//db handle main class
 
 require_login();
 $context = context_system::instance();
-require_capability('local/add_user:manageusers', $context);
+require_capability('local/add_user:add_user', $context);
 
 $PAGE->set_url(new moodle_url('/local/add_user/add_user.php'));
 $PAGE->set_context(\context_system::instance());
