@@ -29,6 +29,7 @@ function xmldb_local_add_user_install()
     if (!$dbman->field_exists($table, $position_id_field)) {
 
         $dbman->add_field($table, $position_id_field);
+        //below - doesnt work!!!
         $position_key = new xmldb_key('position_id', XMLDB_KEY_FOREIGN, array('position_id'), 'position', array('id'));
         $dbman->add_key($table, $position_key);
 
@@ -42,6 +43,7 @@ function xmldb_local_add_user_install()
     if (!$dbman->field_exists($table, $organizational_unit_id_field)) {
 
         $dbman->add_field($table, $organizational_unit_id_field);
+        //below - doesnt work!!!
         $organizational_unit_key = new xmldb_key('organizational_unit_id', XMLDB_KEY_FOREIGN, array('organizational_unit_id'), 'organizational_unit', array('id'));
         $dbman->add_key($table, $organizational_unit_key);
 
