@@ -44,16 +44,17 @@ $PAGE->set_heading(get_string('add_user', 'local_add_user'));
 /**
  * njprwd czesc front end
  */
-echo $OUTPUT->header();//njprwd zalaczenie naglowka wtyczki
-
+echo $OUTPUT->header();
 $templatecontext = (object)[
-  //  'messages' => array_values($messages),
-   // 'editurl' => new moodle_url('/local//form.php'),
+
+    'editurl' => new moodle_url('/local/add_user/simplehtml_form.php')
+
 ];
 // ponizej wsk na sciezke oraz zmienna z jakiej ma byc rendrerowana tyresc front end wtyczki
-echo $OUTPUT->render_from_template('local_add_user/add_user', $templatecontext);//renderowanie templatki formularza
+echo $OUTPUT->render_from_template('local_add_user/add_user',$templatecontext);//renderowanie templatki formularza
 
 echo $OUTPUT->footer();
+
 
 /**
  * njprwd czesc koniec front end
