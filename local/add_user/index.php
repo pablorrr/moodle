@@ -73,8 +73,7 @@ echo $OUTPUT->header();
 //];
 // ponizej wsk na sciezke oraz zmienna z jakiej ma byc rendrerowana tyresc front end wtyczki
 //echo $OUTPUT->render_from_template('local_add_user/add_user',$templatecontext);//renderowanie templatki formularza
-echo 'cos tam';
-echo 'cos tam';
+
 //D:\MoodleWindowsInstaller-latest-311\server\moodle\local\add_user
 echo  __DIR__ .'\classes\form\simplehtml_form.php';
 $mform->display();

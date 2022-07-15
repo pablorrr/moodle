@@ -16,9 +16,8 @@ class simplehtml_form extends moodleform
 
         $mform = $this->_form; // Don't forget the underscore! 
 
-        $mform->addElement('text', 'email', get_string('email')); // Add elements to your form.
-        $mform->setType('email', PARAM_NOTAGS);                   // Set type of element.
-        $mform->setDefault('email', 'Please enter email');        // Default value.
+        $mform->addElement('filepicker', 'userfile', get_string('file'), null,
+            array('maxbytes' => $maxbytes, 'accepted_types' => '*'));    // Default value.
 
     }
 
