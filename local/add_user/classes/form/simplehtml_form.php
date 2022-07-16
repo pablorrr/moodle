@@ -15,9 +15,10 @@ class simplehtml_form extends moodleform
         global $CFG;
 
         $mform = $this->_form; // Don't forget the underscore! 
-
-        $mform->addElement('filepicker', 'userfile', get_string('file'), null,
-            array('maxbytes' => $maxbytes, 'accepted_types' => '*'));    // Default value.
+        $maxbytes =  5000000;
+        $mform->addElement('filemanager', 'attachments', get_string('attachment', 'moodle'), null,
+            array('subdirs' => 0, 'maxbytes' => $maxbytes, 'areamaxbytes' => 10485760, 'maxfiles' => 50,
+                'accepted_types' => array('csv'), 'return_types'=> FILE_INTERNAL | FILE_EXTERNAL));
 
     }
 

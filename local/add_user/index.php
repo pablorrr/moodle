@@ -45,10 +45,10 @@ $PAGE->set_heading(get_string('add_user', 'local_add_user'));
 //$messages = $DB->get_records('local_add_user', null, 'id');
 
 //Instantiate simplehtml_form 
-$mform = new simplehtml_form();
+
 
 //Form processing and displaying is done here
-if ($mform->is_cancelled()) {
+/*if ($mform->is_cancelled()) {
     //Handle form cancel operation, if cancel button is present on form
 } else if ($fromform = $mform->get_data()) {
     //In this case you process validated data. $mform->get_data() returns data posted in form.
@@ -60,23 +60,105 @@ if ($mform->is_cancelled()) {
     $mform->set_data($toform);
     //displays the form
     //$mform->display();
+}*/
+
+/*
+ * https://www.tutsmake.com/import-csv-file-into-mysql-using-php/
+ * 
+ * <?php
+// include mysql database configuration file
+include_once 'db.php';
+ 
+if (isset($_POST['submit']))
+{
+ 
+    // Allowed mime types
+    $fileMimes = array(
+        'text/x-comma-separated-values',
+        'text/comma-separated-values',
+        'application/octet-stream',
+        'application/vnd.ms-excel',
+        'application/x-csv',
+        'text/x-csv',
+        'text/csv',
+        'application/csv',
+        'application/excel',
+        'application/vnd.msexcel',
+        'text/plain'
+    );
+ 
+    // Validate whether selected file is a CSV file
+    if (!empty($_FILES['file']['name']) && in_array($_FILES['file']['type'], $fileMimes))
+    {
+ 
+            // Open uploaded CSV file with read-only mode
+            $csvFile = fopen($_FILES['file']['tmp_name'], 'r');
+ 
+            // Skip the first line
+            fgetcsv($csvFile);
+ 
+            // Parse data from CSV file line by line
+             // Parse data from CSV file line by line
+            while (($getData = fgetcsv($csvFile, 10000, ",")) !== FALSE)
+            {
+                // Get row data
+                $name = $getData[0];
+                $email = $getData[1];
+                $phone = $getData[2];
+                $status = $getData[3];
+ 
+                // If user already exists in the database with the same email
+                $query = "SELECT id FROM users WHERE email = '" . $getData[1] . "'";
+ 
+                $check = mysqli_query($conn, $query);
+ 
+                if ($check->num_rows > 0)
+                {
+                    mysqli_query($conn, "UPDATE users SET name = '" . $name . "', phone = '" . $phone . "', status = '" . $status . "', created_at = NOW() WHERE email = '" . $email . "'");
+                }
+                else
+                {
+                     mysqli_query($conn, "INSERT INTO users (name, email, phone, created_at, updated_at, status) VALUES ('" . $name . "', '" . $email . "', '" . $phone . "', NOW(), NOW(), '" . $status . "')");
+ 
+                }
+            }
+ 
+            // Close opened CSV file
+            fclose($csvFile);
+ 
+            header("Location: index.php");
+         
+    }
+    else
+    {
+        echo "Please select valid file";
+    }
+}
+ * */
+$mform = new simplehtml_form();
+if ($data = $mform->get_data()) {
+    var_dump($_FILES);
+    $name = $mform->get_new_filename('attachments');
+    $content = $data;
+   var_dump($content);
+    $contentos = 'not empty';
+    
+} else {
+    $name="empty";
+    $contentos = 'empty';
 }
 
 /**
  * njprwd czesc front end
  */
 echo $OUTPUT->header();
-//$templatecontext = (object)[
 
-  //  'editurl' => new moodle_url('/local/add_user/simplehtml_form.php')
 
-//];
-// ponizej wsk na sciezke oraz zmienna z jakiej ma byc rendrerowana tyresc front end wtyczki
-//echo $OUTPUT->render_from_template('local_add_user/add_user',$templatecontext);//renderowanie templatki formularza
-
-//D:\MoodleWindowsInstaller-latest-311\server\moodle\local\add_user
-echo  __DIR__ .'\classes\form\simplehtml_form.php';
 $mform->display();
+//var_dump($content);
+echo $name;
+echo $contentos;
+
 echo $OUTPUT->footer();
 
 
