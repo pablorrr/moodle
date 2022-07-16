@@ -51,6 +51,10 @@ echo '<pre>';
 var_dump($fs);
 echo '</pre>';
 
+
+
+ *
+ * */
 echo "<h1>_FILES</h1>";
 echo '<pre>';
 var_dump($_FILES);
@@ -71,7 +75,17 @@ if ($files = $fs->get_area_files($context->id, 'local_filemanager', 'attachment'
         echo "<h1>file</h1>";
         echo '<pre>';
         var_dump($file);
+
         echo '</pre>';
+
+
+        $get_content = $file->get_content();
+        echo "<h1>file content</h1>";
+        echo '<pre>';
+        var_dump($get_content);
+
+        echo '</pre>';
+        $get_content = $file->get_content();
         // Build the File URL. Long process! But extremely accurate.
         $fileurl = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename());
         // Display the image
