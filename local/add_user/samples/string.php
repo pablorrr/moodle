@@ -26,7 +26,7 @@ echo '<pre>';
 //echo $arr[0];
 echo '<br>';
 
-$keys_arr = explode(',', $arr[0]);
+$keys_arr = explode(',', trim($arr[0]));
 //echo $arr[1];
 array_shift($arr);
 //print_r($arr);
@@ -34,69 +34,88 @@ echo '</pre>';
 
 foreach ($arr as $item) {
 
-    $new_arr[] =(object)array_combine($keys_arr,explode(',',$item) );
+    $object_arr[] = (object)array_combine($keys_arr, explode(',', $item));
+}
+echo '<pre>';
+//print_r($object_arr);
+echo '<br>';
+
+echo '<pre>';
+//print_r($object_arr[2]);
+echo '<br>';
+
+echo '<pre>';
+//print_r($object_arr[2]->lastname);
+echo '<br>';
+
+
+echo '<pre>';
+//print_r($object_arr[2]);
+echo '<br>';
+
+echo '<pre>';
+//print_r($object_arr);
+echo '<br>';
+
+foreach ($object_arr as $clon) {
+    $user_object_arr[] = clone $clon;
+    $position_object_arr[] = clone $clon;
+    $organizational_unit_object_arr[] = clone $clon;
+}
+
+
+foreach ($user_object_arr as $object) {
+    unset($object->organizational_unit);
+    unset($object->position);
+
+}
+
+
+echo '<pre>';
+echo '<h1>user_object_arr</h1>';
+print_r($user_object_arr);
+echo '<br>';
+//[username] => Termionator
+//            [email] => arnoldswarzeneger@gmail.com
+//            [firstname] => Arnie
+//            [lastname] => Swarzeneger
+//            [employee_number] => 3
+//            [organizational_unit] => PR
+
+foreach ($position_object_arr as $object) {
+    unset($object->username);
+    unset($object->lastname);
+    unset($object->email);
+    unset($object->firstname);
+    unset($object->employee_number);
+    unset($object->organizational_unit);
+
+
 }
 
 echo '<pre>';
-print_r($new_arr);
+echo '<h1>position_object_arr</h1>';
+print_r($position_object_arr);
+echo '<br>';
+echo '</pre>';
+
+foreach ($organizational_unit_object_arr as $object) {
+    unset($object->username);
+    unset($object->lastname);
+    unset($object->email);
+    unset($object->firstname);
+    unset($object->employee_number);
+    unset($object->position);
+
+}
+
+
+echo '<pre>';
+echo '<h1>organizational_unit_object_arr</h1>';
+print_r($organizational_unit_object_arr);
 echo '<br>';
 
 echo '<pre>';
-print_r($new_arr[0]->username);
+echo '<h1>object_arr</h1>';
+print_r($object_arr);
 echo '<br>';
-
-
-
-
-
-
-
-
-
-/*$record = new stdClass();
-$record->username;
-$record->email;
-$record->firstname;
-$record->lastname;
-$record->employee_number;
-$record->organizational_unit;
-$record->position;
-var_dump($record);
-
-
-
-
-
-
-$var = '["SupplierInvoiceReconciliation"]';
-$var = json_decode($var, TRUE);
-print_r($var);
-
-echo '<br>';
-$var = '["SupplierInvoiceReconciliation"]';
-$var = json_decode($str, TRUE);
-print_r($var);
-
-
-$gameData = new stdClass();
-$gameData->location = new stdClass();
-$basementstring = "basement";
-
-
-echo '<br>';
-class tLocation {
-    public $description;
-}
-
-$gameData->location->{'darkHouse'} = new tLocation;
-$gameData->location->{"darkHouse"}->description = "You walkinto a dusty old house";
-
-
-$gameData->location->{$basementstring} = new tLocation;
-$gameData->location->{"basement"}->description = "its really damp down here.";
-
-var_dump($gameData);*/
-
-//echo $gameData->location->basement->description;
-
-
