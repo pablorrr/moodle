@@ -21,8 +21,6 @@
 // --------------
 
 
-
-
 /*
  *
  * https://docs.moodle.org/dev/File_API WAZNE!!!!!
@@ -115,29 +113,81 @@ if ($mform->is_cancelled()) {
     echo '<p>In this case you process validated data. $mform->get_data() returns data posted in form.<p>';
     echo '<h1>data var</h1>';
     echo '<pre>';
-   var_dump($data);
-    echo '</pre>';
-    echo "<h1>_FILES</h1>";
-    echo '<pre>';
-    var_dump($_FILES);
-    echo '</pre>';
 
-    echo "<h1>POST</h1>";
-    echo '<pre>';
-    var_dump($_POST);
-    echo '</pre>';
-
-    $content = $mform->get_file_content('attachments');
-    echo '<h1>content</h1>';
-    echo '<pre>';
-    var_dump($content);
-    echo '</pre>';
-    // Save the files submitted
-   echo '<h1>saved var</h1>';
-
-  $saved = file_save_draft_area_files($draftitemid, $context->id, 'local_filemanager', 'attachment', $itemid, $filemanageropts);
+    $saved = file_save_draft_area_files($draftitemid, $context->id, 'local_filemanager', 'attachment', $itemid, $filemanageropts);
     //file_save_draft_area_files($draftitemid, $context->id, 'local_filemanager', 'attachment', $itemid, $filemanageropts);
-  var_dump($saved);
+    var_dump($saved);
+
+
+    // ---------
+// Display Managed Files!
+// ---------
+    $fs = get_file_storage();
+    echo "<h1>fs</h1>";
+    echo '<pre>';
+    var_dump($fs);
+    echo '</pre>';
+
+
+    if ($files = $fs->get_area_files($context->id, 'local_filemanager', 'attachment', '0', 'sortorder', false)) {
+        echo "<h1>files</h1>";
+        echo '<pre>';
+        var_dump($files);
+        echo '</pre>';
+        // Look through each file being managed
+        foreach ($files as $file) {
+            echo "<h1>file</h1>";
+            echo '<pre>';
+            var_dump($file);
+
+            echo '</pre>';
+
+
+            $get_content = $file->get_content();
+            echo "<h1>file content</h1>";
+            echo '<pre>';
+            var_dump($get_content);
+
+            echo '</pre>';
+            if (is_string($get_content)) {
+                echo '<h1>is string</h1>';
+            } else {
+                echo '<h1>is string</h1>';
+            }
+
+
+            echo '<pre>';
+            $enoflinestring = str_replace("\n", 'endOfLine', $get_content);
+            $arr = explode('endOfLine', $enoflinestring);
+            $keys_arr = explode(',', $arr[0]);
+
+            array_shift($arr);
+
+            foreach ($arr as $item) {
+
+                $object_arr[] = (object)array_combine($keys_arr, explode(',', $item));
+            }
+
+            foreach ($arr as $item) {
+                $DB->insert_records($table, $object_arr);
+
+            }
+
+
+            // Build the File URL. Long process! But extremely accurate.
+            $fileurl = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename());
+            // Display the image
+            $download_url = $fileurl->get_port() ? $fileurl->get_scheme() . '://' . $fileurl->get_host() . $fileurl->get_path() . ':' . $fileurl->get_port() : $fileurl->get_scheme() . '://' . $fileurl->get_host() . $fileurl->get_path();
+            echo '<a href="' . $download_url . '">' . $file->get_filename() . '</a><br/>';
+        }
+    } else {
+        echo '<p>Please upload an image first</p>';
+    }
+
+
+    $saved = file_save_draft_area_files($draftitemid, $context->id, 'local_filemanager', 'attachment', $itemid, $filemanageropts);
+    //file_save_draft_area_files($draftitemid, $context->id, 'local_filemanager', 'attachment', $itemid, $filemanageropts);
+    var_dump($saved);
 } else {
     // FAIL / DEFAULT
     echo '<h1 style="text-align:center">Display form</h1>';
