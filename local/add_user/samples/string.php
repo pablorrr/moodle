@@ -89,9 +89,10 @@ foreach ($object_arr as $clon) {
 foreach ($user_object_arr as $object) {
     unset($object->organizational_unit);
     unset($object->position);
-
 }
-
+/////////////////////////////////////////////
+/// //////////////////////////////////////
+/// 
 
 echo '<pre>';
 echo '<h1>user_object_arr</h1>';
@@ -111,8 +112,6 @@ foreach ($position_object_arr as $object) {
     unset($object->firstname);
     unset($object->employee_number);
     unset($object->organizational_unit);
-
-
 }
 
 echo '<pre>';

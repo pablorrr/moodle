@@ -116,7 +116,7 @@ if ($mform->is_cancelled()) {
 
     $saved = file_save_draft_area_files($draftitemid, $context->id, 'local_filemanager', 'attachment', $itemid, $filemanageropts);
     //file_save_draft_area_files($draftitemid, $context->id, 'local_filemanager', 'attachment', $itemid, $filemanageropts);
-    var_dump($saved);
+    // var_dump($saved);
 
 
     // ---------
@@ -125,20 +125,20 @@ if ($mform->is_cancelled()) {
     $fs = get_file_storage();
     echo "<h1>fs</h1>";
     echo '<pre>';
-    var_dump($fs);
+    // var_dump($fs);
     echo '</pre>';
 
 
     if ($files = $fs->get_area_files($context->id, 'local_filemanager', 'attachment', '0', 'sortorder', false)) {
         echo "<h1>files</h1>";
         echo '<pre>';
-        var_dump($files);
+        //  var_dump($files);
         echo '</pre>';
         // Look through each file being managed
         foreach ($files as $file) {
             echo "<h1>file</h1>";
             echo '<pre>';
-            var_dump($file);
+            //   var_dump($file);
 
             echo '</pre>';
 
@@ -146,7 +146,7 @@ if ($mform->is_cancelled()) {
             $get_content = $file->get_content();
             echo "<h1>file content</h1>";
             echo '<pre>';
-            var_dump($get_content);
+         //   var_dump($get_content);
 
             echo '</pre>';
             if (is_string($get_content)) {
@@ -157,42 +157,82 @@ if ($mform->is_cancelled()) {
 
 
             echo '<pre>';
-            $enoflinestring = str_replace("\n", 'endOfLine', $get_content);
+            echo '</pre>';
+
+            $enoflinestring = str_replace("\n", 'endOfLine', trim($get_content));
+//echo  $enoflinestring;
             $arr = explode('endOfLine', $enoflinestring);
-            $keys_arr = explode(',', $arr[0]);
+            echo '<pre>';
+            var_dump($arr);
+            echo '</pre>';
+            //user table has following columns names:
+            $additional_arr_key = ['description', 'imagealt', 'lastnamephonetic', 'firstnamephonetic', 'middlename', 'alternatename', 'moodlenetprofile'];
+            $keys_arr = array_merge(explode(',', trim($arr[0])), $additional_arr_key);
 
+            //cut off header from the array - seprate content of array from keys name(as future column names)
             array_shift($arr);
-
-            foreach ($arr as $item) {
-
-                $object_arr[] = (object)array_combine($keys_arr, explode(',', $item));
+            var_dump($arr);
+            //additional values to array to setup fields in table which cant be default
+            foreach ($arr as $key => $value) {
+                $arr[$key] = $value . ',description,imagealt,lastnamephonetic,firstnamephonetic,middlename,alternatename,moodlenetprofile';
             }
 
-            $arr_object = [
-                (object)['firstname' => 'Jada',
-                    'username' => 'Roger',
-                    'description' => 'description',
-                    'imagealt' => 'imagealt',
-                    'lastnamephonetic' => 'lastnamephonetic',
-                    'firstnamephonetic' => 'firstnamephonetic',
-                    'middlename' => 'middlename',
-                    'alternatename' => 'alternatename',
-                    'moodlenetprofile' => 'moodlenetprofile'
-                ],
+            //create  array of objects
+            foreach ($arr as $item) {
+                //  echo '<br>';
+                //  echo $item;
+                //  echo '<br>';
+                $object_arr[] = (object)array_combine($keys_arr, explode(',', $item));
 
-                (object)['firstname' => 'Jordsanrrr',
-                    'username' => 'Mikerrr',
-                    'description' => 'descriptio',
-                    'imagealt' => 'imageal',
-                    'lastnamephonetic' => 'lastnamephoneti',
-                    'firstnamephonetic' => 'firstnamephoneti',
-                    'middlename' => 'middlenam',
-                    'alternatename' => 'alternatenam',
-                    'moodlenetprofile' => 'moodlenetprofil'
+            }
 
-                ]
+           echo '<h1>object arr el count' . count($object_arr) . '<br>arr el count' . count($arr) .'</h1>';
+            //cloning objects to specify which object is sendig as parameter to given table name at insert method
+            foreach ($object_arr as $clon) {
+                if (is_object($clon)) {
+                    $user_object_arr[] = clone $clon;
+                    $position_object_arr[] = clone $clon;
+                    $organizational_unit_object_arr[] = clone $clon;
+                }
+            }
 
-            ];
+            //user_object_arr preparation for sending to table
+            foreach ($user_object_arr as $object) {
+                if (is_object($object)) {
+                    unset($object->organizational_unit);
+                    unset($object->position);
+
+                }
+            }
+
+
+          //  var_dump($user_object_arr);
+
+            /*  $arr_object = [
+                  (object)['firstname' => 'Jada',
+                      'username' => 'Roger',
+                      'description' => 'description',
+                      'imagealt' => 'imagealt',
+                      'lastnamephonetic' => 'lastnamephonetic',
+                      'firstnamephonetic' => 'firstnamephonetic',
+                      'middlename' => 'middlename',
+                      'alternatename' => 'alternatename',
+                      'moodlenetprofile' => 'moodlenetprofile'
+                  ],
+
+                  (object)['firstname' => 'Jordsanrrr',
+                      'username' => 'Mikerrr',
+                      'description' => 'descriptio',
+                      'imagealt' => 'imageal',
+                      'lastnamephonetic' => 'lastnamephoneti',
+                      'firstnamephonetic' => 'firstnamephoneti',
+                      'middlename' => 'middlenam',
+                      'alternatename' => 'alternatenam',
+                      'moodlenetprofile' => 'moodlenetprofil'
+
+                  ]
+
+              ];*/
 
             /* $arr_object = (object)['username' => 'Jake', 'firstname' => 'Jasen', 'description' => 'description', 'imagealt' => 'imagealt',
             'lastnamephonetic' => 'lastnamephonetic', 'firstnamephonetic' => 'firstnamephonetic', 'middlename' => 'middlename', 'alternatename' => 'alternatename',
@@ -210,8 +250,8 @@ if ($mform->is_cancelled()) {
              $object->moodlenetprofile = 'moodlenetprofile';*/
 
 
-            try {
-                $DB->insert_records('user', $arr_object);
+           try {
+                $DB->insert_records('user', $user_object_arr);
             } catch (dml_exception $e) {
                 echo $e->getMessage();
                 echo '<br>';
@@ -226,8 +266,6 @@ if ($mform->is_cancelled()) {
                 echo '<br>';
                 echo $e->getTrace();
                 echo '<br>';
-
-
             }
 
 
@@ -251,7 +289,4 @@ if ($mform->is_cancelled()) {
     echo '<p>This is the form first display OR "errors"<p>';
     $mform->display();
 }
-
-
 echo $OUTPUT->footer();
-
