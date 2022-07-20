@@ -168,8 +168,37 @@ if ($mform->is_cancelled()) {
                 $object_arr[] = (object)array_combine($keys_arr, explode(',', $item));
             }
 
-            foreach ($arr as $item) {
-                $DB->insert_records($table, $object_arr);
+            //  $arr_object= [(object)['username'=>'Jake','firstname'=>'Jasen'],(object)['username'=>'Jaker','firstname'=>'Jasenr'] ];
+
+            //  $arr_object = (object)['username' => 'Jake', 'firstname' => 'Jasen'];
+            $object = new stdClass();
+            $object->username = 'Jake';
+            $object->firstname = 'Jason';
+            $object->description = 'test desc';
+            $object->imagealt = 'imagealt';
+            $object->lastnamephonetic = 'lastnamephonetic';
+            $object->firstnamephonetic = 'firstnamephonetic';
+            $object->middlename = 'middlename';
+            $object->alternatename = 'alternatename';
+            $object->moodlenetprofile = 'moodlenetprofile';
+
+            try {
+                $DB->insert_record('user', $object);
+            } catch (dml_exception $e) {
+                echo $e->getMessage();
+                echo '<br>';
+                echo $e->debuginfo;
+                echo '<br>';
+                echo '<br>';
+                echo $e->errorcode;
+                echo '<br>';
+                echo '<br>';
+                echo $e->getLine();
+                echo '<br>';
+                echo '<br>';
+                echo $e->getTrace();
+                echo '<br>';
+
 
             }
 
