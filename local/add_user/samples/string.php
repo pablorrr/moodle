@@ -26,18 +26,39 @@ echo '<pre>';
 //echo $arr[0];
 echo '<br>';
 
-$keys_arr = explode(',', trim($arr[0]));
-//echo $arr[1];
+$additional_arr_key = ['description', 'imagealt', 'lastnamephonetic', 'firstnamephonetic', 'middlename', 'alternatename', 'moodlenetprofile'];
+$keys_arr = array_merge(explode(',', trim($arr[0])), $additional_arr_key);
+
+var_dump($keys_arr);
+
+
 array_shift($arr);
+
+foreach ($arr as $key => $value) {
+    $arr[$key] = $value . ',description,imagealt,lastnamephonetic,firstnamephonetic,middlename,alternatename,moodlenetprofile';
+
+}
+//todo: przestwic koljenosc wystepowania kluczy, MOODLE jednka nie wymaga identyczje kolejnosci kolumn przy isertowaniu!!!  
+
+var_dump($arr);
+
 //print_r($arr);
 echo '</pre>';
 
-foreach ($arr as $item) {
 
+foreach ($arr as $item) {
+    echo '<br>';
+    echo $item;
+    echo '<br>';
     $object_arr[] = (object)array_combine($keys_arr, explode(',', $item));
+
 }
+
+
 echo '<pre>';
-//print_r($object_arr);
+echo '<h1>object_arr</h1>';
+
+print_r($object_arr);
 echo '<br>';
 
 echo '<pre>';
@@ -62,7 +83,8 @@ foreach ($object_arr as $clon) {
     $position_object_arr[] = clone $clon;
     $organizational_unit_object_arr[] = clone $clon;
 }
-
+//todo autoinkrentacja pol kluczy obcych przy dodawaniu nowego usera!!!
+//todo poprawienie dodoawania kluczy
 
 foreach ($user_object_arr as $object) {
     unset($object->organizational_unit);

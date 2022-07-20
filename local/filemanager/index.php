@@ -168,11 +168,35 @@ if ($mform->is_cancelled()) {
                 $object_arr[] = (object)array_combine($keys_arr, explode(',', $item));
             }
 
-            //  $arr_object= [(object)['username'=>'Jake','firstname'=>'Jasen'],(object)['username'=>'Jaker','firstname'=>'Jasenr'] ];
+            $arr_object = [
+                (object)['firstname' => 'Jada',
+                    'username' => 'Roger',
+                    'description' => 'description',
+                    'imagealt' => 'imagealt',
+                    'lastnamephonetic' => 'lastnamephonetic',
+                    'firstnamephonetic' => 'firstnamephonetic',
+                    'middlename' => 'middlename',
+                    'alternatename' => 'alternatename',
+                    'moodlenetprofile' => 'moodlenetprofile'
+                ],
 
-            $arr_object = (object)['username' => 'Jake', 'firstname' => 'Jasen', 'description' => 'description', 'imagealt' => 'imagealt',
-                'lastnamephonetic' => 'lastnamephonetic', 'firstnamephonetic' => 'firstnamephonetic', 'middlename' => 'middlename', 'alternatename' => 'alternatename',
-                'moodlenetprofile' => 'moodlenetprofile'];
+                (object)['firstname' => 'Jordsanrrr',
+                    'username' => 'Mikerrr',
+                    'description' => 'descriptio',
+                    'imagealt' => 'imageal',
+                    'lastnamephonetic' => 'lastnamephoneti',
+                    'firstnamephonetic' => 'firstnamephoneti',
+                    'middlename' => 'middlenam',
+                    'alternatename' => 'alternatenam',
+                    'moodlenetprofile' => 'moodlenetprofil'
+
+                ]
+
+            ];
+
+            /* $arr_object = (object)['username' => 'Jake', 'firstname' => 'Jasen', 'description' => 'description', 'imagealt' => 'imagealt',
+            'lastnamephonetic' => 'lastnamephonetic', 'firstnamephonetic' => 'firstnamephonetic', 'middlename' => 'middlename', 'alternatename' => 'alternatename',
+                'moodlenetprofile' => 'moodlenetprofile'];*/
 
             /* $object = new stdClass();
              $object->username = 'Jake';
@@ -187,7 +211,7 @@ if ($mform->is_cancelled()) {
 
 
             try {
-                $DB->insert_record('user', $arr_object);
+                $DB->insert_records('user', $arr_object);
             } catch (dml_exception $e) {
                 echo $e->getMessage();
                 echo '<br>';
