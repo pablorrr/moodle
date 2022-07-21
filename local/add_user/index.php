@@ -50,7 +50,6 @@ $PAGE->set_title('Send User to DB');
 $PAGE->set_heading('Send User to DB');
 
 
-
 // ===============
 //
 //
@@ -65,30 +64,6 @@ $customdata = array('filemanageropts' => $filemanageropts);
 
 // Create a new form object (found in lib.php)
 $mform = new form(null, $customdata);
-
-// ---------
-// CONFIGURE FILE MANAGER
-// ---------
-// From http://docs.moodle.org/dev/Using_the_File_API_in_Moodle_forms#filemanager
-$itemid = 0; // This is used to distinguish between multiple file areas, e.g. different student's assignment submissions, or attachments to different forum posts, in this case we use '0' as there is no relevant id to use
-
-// Fetches the file manager draft area, called 'attachments' 
-$draftitemid = file_get_submitted_draft_itemid('attachments');
-
-// Copy all the files from the 'real' area, into the draft area
-file_prepare_draft_area($draftitemid, $context->id, 'local_filemanager', 'attachment', $itemid, $filemanageropts);
-
-// Prepare the data to pass into the form - normally we would load this from a database, but, here, we have no 'real' record to load
-$entry = new stdClass();
-$entry->attachments = $draftitemid; // Add the draftitemid to the form, so that 'file_get_submitted_draft_itemid' can retrieve it
-// --------- 
-
-
-// Set form data
-// This will load the file manager with your previous files
-$mform->set_data($entry);
-
-
 // ===============
 //
 //
@@ -97,10 +72,6 @@ $mform->set_data($entry);
 //
 // ===============
 echo $OUTPUT->header();
-
-echo "<a href='/local/filemanager/index.php'><input type='button' value='Manage Files'></a>";
-echo "<a style='padding-left:10px' href='/local/filemanager/view.php'><input type='button' value='View Files'></a>";
-
 // ----------
 // Form Submit Status
 // ----------
@@ -116,10 +87,6 @@ if ($mform->is_cancelled()) {
     echo '<p>In this case you process validated data. $mform->get_data() returns data posted in form.<p>';
     echo '<h1>data var</h1>';
     echo '<pre>';
-
-    $saved = file_save_draft_area_files($draftitemid, $context->id, 'local_filemanager', 'attachment', $itemid, $filemanageropts);
-    //file_save_draft_area_files($draftitemid, $context->id, 'local_filemanager', 'attachment', $itemid, $filemanageropts);
-    // var_dump($saved);
 
 
     // ---------
@@ -182,9 +149,7 @@ if ($mform->is_cancelled()) {
 
             //create  array of objects
             foreach ($arr as $item) {
-                //  echo '<br>';
-                //  echo $item;
-                //  echo '<br>';
+
                 $object_arr[] = (object)array_combine($keys_arr, explode(',', $item));
 
             }
@@ -310,20 +275,12 @@ if ($mform->is_cancelled()) {
             }
 
 
-            // Build the File URL. Long process! But extremely accurate.
-            $fileurl = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename());
-            // Display the image
-            $download_url = $fileurl->get_port() ? $fileurl->get_scheme() . '://' . $fileurl->get_host() . $fileurl->get_path() . ':' . $fileurl->get_port() : $fileurl->get_scheme() . '://' . $fileurl->get_host() . $fileurl->get_path();
-            echo '<a href="' . $download_url . '">' . $file->get_filename() . '</a><br/>';
         }
     } else {
         echo '<p>Please upload an image first</p>';
     }
 
 
-    $saved = file_save_draft_area_files($draftitemid, $context->id, 'local_filemanager', 'attachment', $itemid, $filemanageropts);
-    //file_save_draft_area_files($draftitemid, $context->id, 'local_filemanager', 'attachment', $itemid, $filemanageropts);
-    var_dump($saved);
 } else {
     // FAIL / DEFAULT
     echo '<h1 style="text-align:center">Display form</h1>';
