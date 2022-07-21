@@ -103,7 +103,17 @@ echo '<br>';
 //            [firstname] => Arnie
 //            [lastname] => Swarzeneger
 //            [employee_number] => 3
+//
+//
 //            [organizational_unit] => PR
+
+//ususnac [imagealt] => imagealt
+//            [lastnamephonetic] => lastnamephonetic
+//            [firstnamephonetic] => firstnamephonetic
+//            [middlename] => middlename
+//            [alternatename] => alternatename
+//            [moodlenetprofile] => moodlenetprofile
+//dodoac pole
 
 foreach ($position_object_arr as $object) {
     unset($object->username);

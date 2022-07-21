@@ -146,7 +146,7 @@ if ($mform->is_cancelled()) {
             $get_content = $file->get_content();
             echo "<h1>file content</h1>";
             echo '<pre>';
-         //   var_dump($get_content);
+            //   var_dump($get_content);
 
             echo '</pre>';
             if (is_string($get_content)) {
@@ -160,7 +160,7 @@ if ($mform->is_cancelled()) {
             echo '</pre>';
 
             $enoflinestring = str_replace("\n", 'endOfLine', trim($get_content));
-//echo  $enoflinestring;
+            //echo  $enoflinestring;
             $arr = explode('endOfLine', $enoflinestring);
             echo '<pre>';
             var_dump($arr);
@@ -186,7 +186,7 @@ if ($mform->is_cancelled()) {
 
             }
 
-           echo '<h1>object arr el count' . count($object_arr) . '<br>arr el count' . count($arr) .'</h1>';
+            echo '<h1>object arr el count' . count($object_arr) . '<br>arr el count' . count($arr) . '</h1>';
             //cloning objects to specify which object is sendig as parameter to given table name at insert method
             foreach ($object_arr as $clon) {
                 if (is_object($clon)) {
@@ -205,53 +205,91 @@ if ($mform->is_cancelled()) {
                 }
             }
 
-
-          //  var_dump($user_object_arr);
-
-            /*  $arr_object = [
-                  (object)['firstname' => 'Jada',
-                      'username' => 'Roger',
-                      'description' => 'description',
-                      'imagealt' => 'imagealt',
-                      'lastnamephonetic' => 'lastnamephonetic',
-                      'firstnamephonetic' => 'firstnamephonetic',
-                      'middlename' => 'middlename',
-                      'alternatename' => 'alternatename',
-                      'moodlenetprofile' => 'moodlenetprofile'
-                  ],
-
-                  (object)['firstname' => 'Jordsanrrr',
-                      'username' => 'Mikerrr',
-                      'description' => 'descriptio',
-                      'imagealt' => 'imageal',
-                      'lastnamephonetic' => 'lastnamephoneti',
-                      'firstnamephonetic' => 'firstnamephoneti',
-                      'middlename' => 'middlenam',
-                      'alternatename' => 'alternatenam',
-                      'moodlenetprofile' => 'moodlenetprofil'
-
-                  ]
-
-              ];*/
-
-            /* $arr_object = (object)['username' => 'Jake', 'firstname' => 'Jasen', 'description' => 'description', 'imagealt' => 'imagealt',
-            'lastnamephonetic' => 'lastnamephonetic', 'firstnamephonetic' => 'firstnamephonetic', 'middlename' => 'middlename', 'alternatename' => 'alternatename',
-                'moodlenetprofile' => 'moodlenetprofile'];*/
-
-            /* $object = new stdClass();
-             $object->username = 'Jake';
-             $object->firstname = 'Jason';
-             $object->description = 'test desc';
-             $object->imagealt = 'imagealt';
-             $object->lastnamephonetic = 'lastnamephonetic';
-             $object->firstnamephonetic = 'firstnamephonetic';
-             $object->middlename = 'middlename';
-             $object->alternatename = 'alternatename';
-             $object->moodlenetprofile = 'moodlenetprofile';*/
-
-
-           try {
+///////////////send data to user table//////////////////////////////////////
+            try {
                 $DB->insert_records('user', $user_object_arr);
+            } catch (dml_exception $e) {
+                echo $e->getMessage();
+                echo '<br>';
+                echo $e->debuginfo;
+                echo '<br>';
+                echo '<br>';
+                echo $e->errorcode;
+                echo '<br>';
+                echo '<br>';
+                echo $e->getLine();
+                echo '<br>';
+                echo '<br>';
+                echo $e->getTrace();
+                echo '<br>';
+            }
+
+            /////////////////////send data to position table///////////////////////////////////
+
+            foreach ($position_object_arr as $object) {
+                unset($object->username);
+                unset($object->lastname);
+                unset($object->email);
+                unset($object->firstname);
+
+                unset($object->description);
+                unset($object->imagealt);
+                unset($object->lastnamephonetic);
+                unset($object->firstnamephonetic);
+                unset($object->middlename);
+                unset($object->alternatename);
+                unset($object->moodlenetprofile);
+
+                unset($object->employee_number);
+                unset($object->organizational_unit);
+
+
+            }
+
+
+            try {
+                $DB->insert_records('position', $position_object_arr);
+            } catch (dml_exception $e) {
+                echo $e->getMessage();
+                echo '<br>';
+                echo $e->debuginfo;
+                echo '<br>';
+                echo '<br>';
+                echo $e->errorcode;
+                echo '<br>';
+                echo '<br>';
+                echo $e->getLine();
+                echo '<br>';
+                echo '<br>';
+                echo $e->getTrace();
+                echo '<br>';
+            }
+
+
+            /////////////////////send data to organizational_unit table///////////////////////////////////
+
+            foreach ($organizational_unit_object_arr as $object) {
+
+                unset($object->username);
+                unset($object->lastname);
+                unset($object->email);
+                unset($object->firstname);
+                unset($object->employee_number);
+                unset($object->position);
+
+                unset($object->description);
+                unset($object->imagealt);
+                unset($object->lastnamephonetic);
+                unset($object->firstnamephonetic);
+                unset($object->middlename);
+                unset($object->alternatename);
+                unset($object->moodlenetprofile);
+
+            }
+
+
+            try {
+                $DB->insert_records('organizational_unit', $organizational_unit_object_arr);
             } catch (dml_exception $e) {
                 echo $e->getMessage();
                 echo '<br>';
