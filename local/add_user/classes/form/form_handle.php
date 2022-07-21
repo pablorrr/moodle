@@ -14,13 +14,84 @@ class form_handle
         $this->db = $DB;
     }
 
-    public function insert_csv_to_tables($single_file)
+
+    public function insert_data_to_user_table($user_object_arr_param)
     {
 
-        //global $DB;
+        try {
+
+            $this->db->insert_records('user', $user_object_arr_param);
+        } catch (dml_exception $e) {
+            echo $e->getMessage();
+            echo '<br>';
+            echo $e->debuginfo;
+            echo '<br>';
+            echo '<br>';
+            echo $e->errorcode;
+            echo '<br>';
+            echo '<br>';
+            echo $e->getLine();
+            echo '<br>';
+            echo '<br>';
+            echo $e->getTrace();
+            echo '<br>';
+        }
+    }
+
+
+    public function insert_data_to_position_table($position_object_arr_param)
+    {
+
+        try {
+
+            $this->db->insert_records('position', $position_object_arr_param);
+        } catch (dml_exception $e) {
+            echo $e->getMessage();
+            echo '<br>';
+            echo $e->debuginfo;
+            echo '<br>';
+            echo '<br>';
+            echo $e->errorcode;
+            echo '<br>';
+            echo '<br>';
+            echo $e->getLine();
+            echo '<br>';
+            echo '<br>';
+            echo $e->getTrace();
+            echo '<br>';
+        }
+    }
+
+
+    public function insert_data_to_organizational_unit_table($organizational_unit_object_arr_param)
+    {
+
+        try {
+
+            $this->db->insert_records('organizational_unit', $organizational_unit_object_arr_param);
+        } catch (dml_exception $e) {
+            echo $e->getMessage();
+            echo '<br>';
+            echo $e->debuginfo;
+            echo '<br>';
+            echo '<br>';
+            echo $e->errorcode;
+            echo '<br>';
+            echo '<br>';
+            echo $e->getLine();
+            echo '<br>';
+            echo '<br>';
+            echo $e->getTrace();
+            echo '<br>';
+        }
+    }
+
+
+    public function insert_csv_to_tables($single_file)
+    {
         $get_content = $single_file->get_content();
         $enoflinestring = str_replace("\n", 'endOfLine', trim($get_content));
-        //echo  $enoflinestring;
+     
         $arr = explode('endOfLine', $enoflinestring);
 
         //user table has following columns names:
@@ -49,7 +120,9 @@ class form_handle
                 $organizational_unit_object_arr[] = clone $clon;
             }
         }
-
+        /**
+         *send data to user table
+         */
         //user_object_arr preparation for sending to table
         foreach ($user_object_arr as $object) {
             if (is_object($object)) {
@@ -59,28 +132,12 @@ class form_handle
             }
         }
 
-///////////////send data to user table//////////////////////////////////////
-        try {
-            
-            $this->db->insert_records('user', $user_object_arr);
-        } catch (dml_exception $e) {
-            echo $e->getMessage();
-            echo '<br>';
-            echo $e->debuginfo;
-            echo '<br>';
-            echo '<br>';
-            echo $e->errorcode;
-            echo '<br>';
-            echo '<br>';
-            echo $e->getLine();
-            echo '<br>';
-            echo '<br>';
-            echo $e->getTrace();
-            echo '<br>';
-        }
+        $this->insert_data_to_user_table($user_object_arr);
 
-        /////////////////////send data to position table///////////////////////////////////
-
+        /**
+         *send data to position table
+         */
+        
         foreach ($position_object_arr as $object) {
             unset($object->username);
             unset($object->lastname);
@@ -97,31 +154,14 @@ class form_handle
 
             unset($object->employee_number);
             unset($object->organizational_unit);
-
-
         }
+        
+        $this->insert_data_to_position_table($position_object_arr);
 
 
-        try {
-            $this->db->insert_records('position', $position_object_arr);
-        } catch (dml_exception $e) {
-            echo $e->getMessage();
-            echo '<br>';
-            echo $e->debuginfo;
-            echo '<br>';
-            echo '<br>';
-            echo $e->errorcode;
-            echo '<br>';
-            echo '<br>';
-            echo $e->getLine();
-            echo '<br>';
-            echo '<br>';
-            echo $e->getTrace();
-            echo '<br>';
-        }
-
-
-        /////////////////////send data to organizational_unit table///////////////////////////////////
+        /**
+         * send data to organizational_unit table
+         */
 
         foreach ($organizational_unit_object_arr as $object) {
 
@@ -141,25 +181,9 @@ class form_handle
             unset($object->moodlenetprofile);
 
         }
+        
+        $this->insert_data_to_organizational_unit_table($organizational_unit_object_arr);
 
 
-        try {
-            $this->db->insert_records('organizational_unit', $organizational_unit_object_arr);
-        } catch (dml_exception $e) {
-            echo $e->getMessage();
-            echo '<br>';
-            echo $e->debuginfo;
-            echo '<br>';
-            echo '<br>';
-            echo $e->errorcode;
-            echo '<br>';
-            echo '<br>';
-            echo $e->getLine();
-            echo '<br>';
-            echo '<br>';
-            echo $e->getTrace();
-            echo '<br>';
-        }
     }
-
 }
