@@ -26,7 +26,7 @@
  *
  */
 
-use add_user\form\form;
+use adduser\form\form;
 
 
 require_once(__DIR__ . '/../../config.php');//zalacznie moodle
@@ -37,13 +37,13 @@ require_login();
 $context = context_system::instance();
 //todo:fix that below capability
 $PAGE->set_pagelayout('admin');
-require_capability('local/add_user:add_user', $context);
+require_capability('local/adduser:admin', $context);
 
-$PAGE->set_url(new moodle_url('/local/add_user/index.php'));
+$PAGE->set_url(new moodle_url('/local/adduser/index.php'));
 $PAGE->set_context(\context_system::instance());
 
-//$PAGE->set_title(get_string('add_user', 'local_add_user'));
-//$PAGE->set_heading(get_string('add_user', 'local_add_user'));
+//$PAGE->set_title(get_string('adduser', 'local_adduser'));
+//$PAGE->set_heading(get_string('adduser', 'local_adduser'));
 
 // Setup the page
 $PAGE->set_title('Send User to DB');
@@ -59,8 +59,8 @@ $PAGE->set_heading('Send User to DB');
 // ===============
 
 // Create some options for the file manager
-$filemanageropts = array('subdirs' => 0, 'maxbytes' => '0', 'maxfiles' => 50, 'context' => $context);
-$customdata = array('filemanageropts' => $filemanageropts);
+$adduseropts = array('subdirs' => 0, 'maxbytes' => '0', 'maxfiles' => 50, 'context' => $context);
+$customdata = array('adduseropts' => $adduseropts);
 
 // Create a new form object (found in lib.php)
 $mform = new form(null, $customdata);
@@ -79,7 +79,7 @@ if ($mform->is_cancelled()) {
     // CANCELLED
     echo '<h1>Cancelled</h1>';
     echo '<p>Handle form cancel operation, if cancel button is present on form<p>';
-    echo '<a href="/local/filemanager/index.php"><input type="button" value="Try Again" /><a>';
+    echo '<a href="/local/adduser/index.php"><input type="button" value="Try Again" /><a>';
 } else if ($data = $mform->get_data()) {
 
     // SUCCESS
@@ -93,47 +93,19 @@ if ($mform->is_cancelled()) {
 // Display Managed Files!
 // ---------
     $fs = get_file_storage();
-    echo "<h1>fs</h1>";
-    echo '<pre>';
-    // var_dump($fs);
-    echo '</pre>';
 
 
-    if ($files = $fs->get_area_files($context->id, 'local_filemanager', 'attachment', '0', 'sortorder', false)) {
-        echo "<h1>files</h1>";
-        echo '<pre>';
-        //  var_dump($files);
-        echo '</pre>';
+    if ($files = $fs->get_area_files($context->id, 'local_adduser', 'attachment', '0', 'sortorder', false)) {
+
         // Look through each file being managed
         foreach ($files as $file) {
-            echo "<h1>file</h1>";
-            echo '<pre>';
-            //   var_dump($file);
-
-            echo '</pre>';
-
 
             $get_content = $file->get_content();
-            echo "<h1>file content</h1>";
-            echo '<pre>';
-            //   var_dump($get_content);
-
-            echo '</pre>';
-            if (is_string($get_content)) {
-                echo '<h1>is string</h1>';
-            } else {
-                echo '<h1>is string</h1>';
-            }
-
-
-            echo '<pre>';
-            echo '</pre>';
-
             $enoflinestring = str_replace("\n", 'endOfLine', trim($get_content));
             //echo  $enoflinestring;
             $arr = explode('endOfLine', $enoflinestring);
             echo '<pre>';
-            var_dump($arr);
+          //  var_dump($arr);
             echo '</pre>';
             //user table has following columns names:
             $additional_arr_key = ['description', 'imagealt', 'lastnamephonetic', 'firstnamephonetic', 'middlename', 'alternatename', 'moodlenetprofile'];
@@ -141,7 +113,7 @@ if ($mform->is_cancelled()) {
 
             //cut off header from the array - seprate content of array from keys name(as future column names)
             array_shift($arr);
-            var_dump($arr);
+            //  var_dump($arr);
             //additional values to array to setup fields in table which cant be default
             foreach ($arr as $key => $value) {
                 $arr[$key] = $value . ',description,imagealt,lastnamephonetic,firstnamephonetic,middlename,alternatename,moodlenetprofile';
@@ -149,12 +121,10 @@ if ($mform->is_cancelled()) {
 
             //create  array of objects
             foreach ($arr as $item) {
-
                 $object_arr[] = (object)array_combine($keys_arr, explode(',', $item));
-
             }
 
-            echo '<h1>object arr el count' . count($object_arr) . '<br>arr el count' . count($arr) . '</h1>';
+            
             //cloning objects to specify which object is sendig as parameter to given table name at insert method
             foreach ($object_arr as $clon) {
                 if (is_object($clon)) {
