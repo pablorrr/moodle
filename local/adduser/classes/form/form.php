@@ -7,7 +7,7 @@
  * @doc https://docs.moodle.org/dev/Event_2
  */
 
-namespace add_user\form;
+namespace adduser\form;
 
 use moodleform;
 
