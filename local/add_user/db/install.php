@@ -33,9 +33,6 @@ function xmldb_local_add_user_install()
         $position_key = new xmldb_key('position_id', XMLDB_KEY_FOREIGN, array('position_id'), 'position', array('id'));
         $dbman->add_key($table, $position_key);
 
-      
-        // $table->add_key('position_id', XMLDB_KEY_FOREIGN, array('position_id'), 'position', array('id'));
-
     }
     $table = new xmldb_table('user');
     $organizational_unit_id_field = new xmldb_field('organizational_unit_id', XMLDB_TYPE_INTEGER, '10');
