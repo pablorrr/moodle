@@ -26,143 +26,308 @@
  *
  */
 
-use add_user\form\simplehtml_form;
+use add_user\form\form;
+
 
 require_once(__DIR__ . '/../../config.php');//zalacznie moodle
-require_once(__DIR__ . '\classes\form\simplehtml_form.php');
-global $DB;//db handle main class
+require_once(__DIR__ . '\classes\form\form.php');
+global $CFG, $USER, $DB, $OUTPUT, $PAGE;
 
 require_login();
 $context = context_system::instance();
+//todo:fix that below capability
+$PAGE->set_pagelayout('admin');
 require_capability('local/add_user:add_user', $context);
 
 $PAGE->set_url(new moodle_url('/local/add_user/index.php'));
 $PAGE->set_context(\context_system::instance());
-$PAGE->set_title(get_string('add_user', 'local_add_user'));
-$PAGE->set_heading(get_string('add_user', 'local_add_user'));
 
-//get records - pobranie rekordow z db z okreslonym lub nie  filtrem sql
-//$messages = $DB->get_records('local_add_user', null, 'id');
+//$PAGE->set_title(get_string('add_user', 'local_add_user'));
+//$PAGE->set_heading(get_string('add_user', 'local_add_user'));
 
-//Instantiate simplehtml_form 
+// Setup the page
+$PAGE->set_title('Send User to DB');
+$PAGE->set_heading('Send User to DB');
 
 
-//Form processing and displaying is done here
-/*if ($mform->is_cancelled()) {
-    //Handle form cancel operation, if cancel button is present on form
-} else if ($fromform = $mform->get_data()) {
-    //In this case you process validated data. $mform->get_data() returns data posted in form.
-} else {
-    // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
-    // or on the first display of the form.
 
-    //Set default data (if any)
-    $mform->set_data($toform);
-    //displays the form
-    //$mform->display();
-}*/
+// ===============
+//
+//
+// PAGE LOGIC
+//
+//
+// ===============
 
-/*
- * https://www.tutsmake.com/import-csv-file-into-mysql-using-php/
- * 
- * <?php
-// include mysql database configuration file
-include_once 'db.php';
- 
-if (isset($_POST['submit']))
-{
- 
-    // Allowed mime types
-    $fileMimes = array(
-        'text/x-comma-separated-values',
-        'text/comma-separated-values',
-        'application/octet-stream',
-        'application/vnd.ms-excel',
-        'application/x-csv',
-        'text/x-csv',
-        'text/csv',
-        'application/csv',
-        'application/excel',
-        'application/vnd.msexcel',
-        'text/plain'
-    );
- 
-    // Validate whether selected file is a CSV file
-    if (!empty($_FILES['file']['name']) && in_array($_FILES['file']['type'], $fileMimes))
-    {
- 
-            // Open uploaded CSV file with read-only mode
-            $csvFile = fopen($_FILES['file']['tmp_name'], 'r');
- 
-            // Skip the first line
-            fgetcsv($csvFile);
- 
-            // Parse data from CSV file line by line
-             // Parse data from CSV file line by line
-            while (($getData = fgetcsv($csvFile, 10000, ",")) !== FALSE)
-            {
-                // Get row data
-                $name = $getData[0];
-                $email = $getData[1];
-                $phone = $getData[2];
-                $status = $getData[3];
- 
-                // If user already exists in the database with the same email
-                $query = "SELECT id FROM users WHERE email = '" . $getData[1] . "'";
- 
-                $check = mysqli_query($conn, $query);
- 
-                if ($check->num_rows > 0)
-                {
-                    mysqli_query($conn, "UPDATE users SET name = '" . $name . "', phone = '" . $phone . "', status = '" . $status . "', created_at = NOW() WHERE email = '" . $email . "'");
-                }
-                else
-                {
-                     mysqli_query($conn, "INSERT INTO users (name, email, phone, created_at, updated_at, status) VALUES ('" . $name . "', '" . $email . "', '" . $phone . "', NOW(), NOW(), '" . $status . "')");
- 
-                }
-            }
- 
-            // Close opened CSV file
-            fclose($csvFile);
- 
-            header("Location: index.php");
-         
-    }
-    else
-    {
-        echo "Please select valid file";
-    }
-}
- * */
-$mform = new simplehtml_form();
-if ($data = $mform->get_data()) {
-    var_dump($_FILES);
-    $name = $mform->get_new_filename('attachments');
-    $content = $data;
-   var_dump($content);
-    $contentos = 'not empty';
-    
-} else {
-    $name="empty";
-    $contentos = 'empty';
-}
+// Create some options for the file manager
+$filemanageropts = array('subdirs' => 0, 'maxbytes' => '0', 'maxfiles' => 50, 'context' => $context);
+$customdata = array('filemanageropts' => $filemanageropts);
 
-/**
- * njprwd czesc front end
- */
+// Create a new form object (found in lib.php)
+$mform = new form(null, $customdata);
+
+// ---------
+// CONFIGURE FILE MANAGER
+// ---------
+// From http://docs.moodle.org/dev/Using_the_File_API_in_Moodle_forms#filemanager
+$itemid = 0; // This is used to distinguish between multiple file areas, e.g. different student's assignment submissions, or attachments to different forum posts, in this case we use '0' as there is no relevant id to use
+
+// Fetches the file manager draft area, called 'attachments' 
+$draftitemid = file_get_submitted_draft_itemid('attachments');
+
+// Copy all the files from the 'real' area, into the draft area
+file_prepare_draft_area($draftitemid, $context->id, 'local_filemanager', 'attachment', $itemid, $filemanageropts);
+
+// Prepare the data to pass into the form - normally we would load this from a database, but, here, we have no 'real' record to load
+$entry = new stdClass();
+$entry->attachments = $draftitemid; // Add the draftitemid to the form, so that 'file_get_submitted_draft_itemid' can retrieve it
+// --------- 
+
+
+// Set form data
+// This will load the file manager with your previous files
+$mform->set_data($entry);
+
+
+// ===============
+//
+//
+// PAGE OUTPUT
+//
+//
+// ===============
 echo $OUTPUT->header();
 
+echo "<a href='/local/filemanager/index.php'><input type='button' value='Manage Files'></a>";
+echo "<a style='padding-left:10px' href='/local/filemanager/view.php'><input type='button' value='View Files'></a>";
 
-$mform->display();
-//var_dump($content);
-echo $name;
-echo $contentos;
+// ----------
+// Form Submit Status
+// ----------
+if ($mform->is_cancelled()) {
+    // CANCELLED
+    echo '<h1>Cancelled</h1>';
+    echo '<p>Handle form cancel operation, if cancel button is present on form<p>';
+    echo '<a href="/local/filemanager/index.php"><input type="button" value="Try Again" /><a>';
+} else if ($data = $mform->get_data()) {
 
+    // SUCCESS
+    echo '<h1>Success!</h1>';
+    echo '<p>In this case you process validated data. $mform->get_data() returns data posted in form.<p>';
+    echo '<h1>data var</h1>';
+    echo '<pre>';
+
+    $saved = file_save_draft_area_files($draftitemid, $context->id, 'local_filemanager', 'attachment', $itemid, $filemanageropts);
+    //file_save_draft_area_files($draftitemid, $context->id, 'local_filemanager', 'attachment', $itemid, $filemanageropts);
+    // var_dump($saved);
+
+
+    // ---------
+// Display Managed Files!
+// ---------
+    $fs = get_file_storage();
+    echo "<h1>fs</h1>";
+    echo '<pre>';
+    // var_dump($fs);
+    echo '</pre>';
+
+
+    if ($files = $fs->get_area_files($context->id, 'local_filemanager', 'attachment', '0', 'sortorder', false)) {
+        echo "<h1>files</h1>";
+        echo '<pre>';
+        //  var_dump($files);
+        echo '</pre>';
+        // Look through each file being managed
+        foreach ($files as $file) {
+            echo "<h1>file</h1>";
+            echo '<pre>';
+            //   var_dump($file);
+
+            echo '</pre>';
+
+
+            $get_content = $file->get_content();
+            echo "<h1>file content</h1>";
+            echo '<pre>';
+            //   var_dump($get_content);
+
+            echo '</pre>';
+            if (is_string($get_content)) {
+                echo '<h1>is string</h1>';
+            } else {
+                echo '<h1>is string</h1>';
+            }
+
+
+            echo '<pre>';
+            echo '</pre>';
+
+            $enoflinestring = str_replace("\n", 'endOfLine', trim($get_content));
+            //echo  $enoflinestring;
+            $arr = explode('endOfLine', $enoflinestring);
+            echo '<pre>';
+            var_dump($arr);
+            echo '</pre>';
+            //user table has following columns names:
+            $additional_arr_key = ['description', 'imagealt', 'lastnamephonetic', 'firstnamephonetic', 'middlename', 'alternatename', 'moodlenetprofile'];
+            $keys_arr = array_merge(explode(',', trim($arr[0])), $additional_arr_key);
+
+            //cut off header from the array - seprate content of array from keys name(as future column names)
+            array_shift($arr);
+            var_dump($arr);
+            //additional values to array to setup fields in table which cant be default
+            foreach ($arr as $key => $value) {
+                $arr[$key] = $value . ',description,imagealt,lastnamephonetic,firstnamephonetic,middlename,alternatename,moodlenetprofile';
+            }
+
+            //create  array of objects
+            foreach ($arr as $item) {
+                //  echo '<br>';
+                //  echo $item;
+                //  echo '<br>';
+                $object_arr[] = (object)array_combine($keys_arr, explode(',', $item));
+
+            }
+
+            echo '<h1>object arr el count' . count($object_arr) . '<br>arr el count' . count($arr) . '</h1>';
+            //cloning objects to specify which object is sendig as parameter to given table name at insert method
+            foreach ($object_arr as $clon) {
+                if (is_object($clon)) {
+                    $user_object_arr[] = clone $clon;
+                    $position_object_arr[] = clone $clon;
+                    $organizational_unit_object_arr[] = clone $clon;
+                }
+            }
+
+            //user_object_arr preparation for sending to table
+            foreach ($user_object_arr as $object) {
+                if (is_object($object)) {
+                    unset($object->organizational_unit);
+                    unset($object->position);
+
+                }
+            }
+
+///////////////send data to user table//////////////////////////////////////
+            try {
+                $DB->insert_records('user', $user_object_arr);
+            } catch (dml_exception $e) {
+                echo $e->getMessage();
+                echo '<br>';
+                echo $e->debuginfo;
+                echo '<br>';
+                echo '<br>';
+                echo $e->errorcode;
+                echo '<br>';
+                echo '<br>';
+                echo $e->getLine();
+                echo '<br>';
+                echo '<br>';
+                echo $e->getTrace();
+                echo '<br>';
+            }
+
+            /////////////////////send data to position table///////////////////////////////////
+
+            foreach ($position_object_arr as $object) {
+                unset($object->username);
+                unset($object->lastname);
+                unset($object->email);
+                unset($object->firstname);
+
+                unset($object->description);
+                unset($object->imagealt);
+                unset($object->lastnamephonetic);
+                unset($object->firstnamephonetic);
+                unset($object->middlename);
+                unset($object->alternatename);
+                unset($object->moodlenetprofile);
+
+                unset($object->employee_number);
+                unset($object->organizational_unit);
+
+
+            }
+
+
+            try {
+                $DB->insert_records('position', $position_object_arr);
+            } catch (dml_exception $e) {
+                echo $e->getMessage();
+                echo '<br>';
+                echo $e->debuginfo;
+                echo '<br>';
+                echo '<br>';
+                echo $e->errorcode;
+                echo '<br>';
+                echo '<br>';
+                echo $e->getLine();
+                echo '<br>';
+                echo '<br>';
+                echo $e->getTrace();
+                echo '<br>';
+            }
+
+
+            /////////////////////send data to organizational_unit table///////////////////////////////////
+
+            foreach ($organizational_unit_object_arr as $object) {
+
+                unset($object->username);
+                unset($object->lastname);
+                unset($object->email);
+                unset($object->firstname);
+                unset($object->employee_number);
+                unset($object->position);
+
+                unset($object->description);
+                unset($object->imagealt);
+                unset($object->lastnamephonetic);
+                unset($object->firstnamephonetic);
+                unset($object->middlename);
+                unset($object->alternatename);
+                unset($object->moodlenetprofile);
+
+            }
+
+
+            try {
+                $DB->insert_records('organizational_unit', $organizational_unit_object_arr);
+            } catch (dml_exception $e) {
+                echo $e->getMessage();
+                echo '<br>';
+                echo $e->debuginfo;
+                echo '<br>';
+                echo '<br>';
+                echo $e->errorcode;
+                echo '<br>';
+                echo '<br>';
+                echo $e->getLine();
+                echo '<br>';
+                echo '<br>';
+                echo $e->getTrace();
+                echo '<br>';
+            }
+
+
+            // Build the File URL. Long process! But extremely accurate.
+            $fileurl = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename());
+            // Display the image
+            $download_url = $fileurl->get_port() ? $fileurl->get_scheme() . '://' . $fileurl->get_host() . $fileurl->get_path() . ':' . $fileurl->get_port() : $fileurl->get_scheme() . '://' . $fileurl->get_host() . $fileurl->get_path();
+            echo '<a href="' . $download_url . '">' . $file->get_filename() . '</a><br/>';
+        }
+    } else {
+        echo '<p>Please upload an image first</p>';
+    }
+
+
+    $saved = file_save_draft_area_files($draftitemid, $context->id, 'local_filemanager', 'attachment', $itemid, $filemanageropts);
+    //file_save_draft_area_files($draftitemid, $context->id, 'local_filemanager', 'attachment', $itemid, $filemanageropts);
+    var_dump($saved);
+} else {
+    // FAIL / DEFAULT
+    echo '<h1 style="text-align:center">Display form</h1>';
+    echo '<p>This is the form first display OR "errors"<p>';
+    $mform->display();
+}
 echo $OUTPUT->footer();
-
-
-/**
- * njprwd czesc koniec front end
- */
-

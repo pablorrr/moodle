@@ -16,24 +16,80 @@ defined('MOODLE_INTERNAL') || die();
 // moodleform is defined in formslib.php
 require_once("$CFG->libdir/formslib.php");
 
+// ===============
+//
+//	Create the Moodle Form
+//
+// ===============
+class form extends moodleform {
 
+    function definition() {
 
-class form  extends moodleform {
-// Add elements to form.
-    public function definition() {
-        //https://docs.moodle.org/dev/Using_the_File_API_in_Moodle_forms#filepicker
-        // A reference to the form is stored in $this->form.
-        // A common convention is to store it in a variable, such as `$mform`.
         $mform = $this->_form; // Don't forget the underscore!
-        $maxbytes =  5000000;
-        $mform->addElement('filepicker', 'userfile', get_string('file'), null,
-            array('maxbytes' => $maxbytes, 'accepted_types' => 'csv'));
+        $filemanageropts = $this->_customdata['filemanageropts'];
 
+        // FILE MANAGER
+        $mform->addElement('filemanager', 'attachments', 'File Manager Example', null, $filemanageropts);
 
+        // Buttons
+        $this->add_action_buttons();
     }
+}
+
+
+
+// ===============
+//
+//	Plugin File
+//
+// ===============
+// I M P O R T A N T
+// 
+// This is the most confusing part. For each plugin using a file manager will automatically
+// look for this function. It always ends with _pluginfile. Depending on where you build
+// your plugin, the name will change. In case, it is a local plugin called file manager.
+
+function local_filemanager_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
+    global $DB;
+
+    if ($context->contextlevel != CONTEXT_SYSTEM) {
+        return false;
+    }
+
+    require_login();
+
+    if ($filearea != 'attachment') {
+        return false;
+    }
+
+    $itemid = (int)array_shift($args);
+
+    if ($itemid != 0) {
+        return false;
+    }
+
+    $fs = get_file_storage();
+
+    $filename = array_pop($args);
+    if (empty($args)) {
+        $filepath = '/';
+    } else {
+        $filepath = '/'.implode('/', $args).'/';
+    }
+
+    $file = $fs->get_file($context->id, 'local_filemanager', $filearea, $itemid, $filepath, $filename);
+    if (!$file) {
+        return false;
+    }
+
+    // finally send the file
+    send_stored_file($file, 0, 0, true, $options); // download MUST be forced - security!
+}
+
+
 
     // Custom validation should be added here.
     function validation($data, $files) {
         return [];
     }
-}
+
