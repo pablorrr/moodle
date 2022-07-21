@@ -17,7 +17,7 @@ defined('MOODLE_INTERNAL') || die();
  * @throws ddl_table_missing_exception
  * @throws ddl_exception
  */
-function xmldb_local_adduser_install()
+function xmldb_local_add_user_install()
 {//https://docs.moodle.org/dev/XMLDB_creating_new_DDL_functions
     global $DB;
 

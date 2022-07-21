@@ -10,4 +10,4 @@
  
 defined('MOODLE_INTERNAL') || die();
  
-$string['adduser'] = 'This is a complete template example of a local plugin';
+$string['plugintitle'] = 'This is a complete template example of a local plugin';

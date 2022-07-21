@@ -7,7 +7,7 @@
  * @doc https://docs.moodle.org/dev/Event_2
  */
 
-namespace adduser\form;
+namespace add_user\form;
 
 use moodleform;
 
@@ -26,10 +26,10 @@ class form extends moodleform {
     function definition() {
 
         $mform = $this->_form; // Don't forget the underscore!
-        $adduseropts = $this->_customdata['adduseropts'];
+        $filemanageropts = $this->_customdata['filemanageropts'];
 
         // FILE MANAGER
-        $mform->addElement('filemanager', 'attachments', 'File Manager Example', null, $adduseropts);
+        $mform->addElement('filemanager', 'attachments', 'File Manager Example', null, $filemanageropts);
 
         // Buttons
         $this->add_action_buttons();
@@ -49,7 +49,7 @@ class form extends moodleform {
 // look for this function. It always ends with _pluginfile. Depending on where you build
 // your plugin, the name will change. In case, it is a local plugin called file manager.
 
-function local_adduser_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
+function local_filemanager_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
     global $DB;
 
     if ($context->contextlevel != CONTEXT_SYSTEM) {
@@ -77,7 +77,7 @@ function local_adduser_pluginfile($course, $cm, $context, $filearea, $args, $for
         $filepath = '/'.implode('/', $args).'/';
     }
 
-    $file = $fs->get_file($context->id, 'local_adduser', $filearea, $itemid, $filepath, $filename);
+    $file = $fs->get_file($context->id, 'local_filemanager', $filearea, $itemid, $filepath, $filename);
     if (!$file) {
         return false;
     }
