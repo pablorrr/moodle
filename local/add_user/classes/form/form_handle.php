@@ -17,7 +17,6 @@ class form_handle
 
     public function insert_data_to_user_table($user_object_arr_param)
     {
-
         try {
 
             $this->db->insert_records('user', $user_object_arr_param);
@@ -91,7 +90,7 @@ class form_handle
     {
         $get_content = $single_file->get_content();
         $enoflinestring = str_replace("\n", 'endOfLine', trim($get_content));
-     
+
         $arr = explode('endOfLine', $enoflinestring);
 
         //user table has following columns names:
@@ -110,9 +109,7 @@ class form_handle
         foreach ($arr as $item) {
             $object_arr[] = (object)array_combine($keys_arr, explode(',', $item));
         }
-
-
-        //cloning objects to specify which object is sendig as parameter to given table name at insert method
+        //cloning objects to specify which object is sending as parameter to given table name at insert method
         foreach ($object_arr as $clon) {
             if (is_object($clon)) {
                 $user_object_arr[] = clone $clon;
@@ -131,13 +128,30 @@ class form_handle
 
             }
         }
+        //convert obj to array to get username col val
+        foreach ($user_object_arr as $object) {
+            $arr = (array)$object;
+            $multi_arr[] = $arr;
+        }
 
-        $this->insert_data_to_user_table($user_object_arr);
+        // var_dump($multi_arr);
+
+        $username_arr = array_column($multi_arr, 'username');
+
+        if (count($username_arr) !== count(array_unique($username_arr))) {
+
+            echo '<h1>usernames must be different !!!</h1>';
+
+        } else {
+            $this->insert_data_to_user_table($user_object_arr);
+
+        }
+
 
         /**
          *send data to position table
          */
-        
+
         foreach ($position_object_arr as $object) {
             unset($object->username);
             unset($object->lastname);
@@ -155,7 +169,7 @@ class form_handle
             unset($object->employee_number);
             unset($object->organizational_unit);
         }
-        
+
         $this->insert_data_to_position_table($position_object_arr);
 
 
@@ -181,9 +195,7 @@ class form_handle
             unset($object->moodlenetprofile);
 
         }
-        
+
         $this->insert_data_to_organizational_unit_table($organizational_unit_object_arr);
-
-
     }
 }

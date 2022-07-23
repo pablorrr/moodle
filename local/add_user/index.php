@@ -39,7 +39,7 @@ require_login();
 $context = context_system::instance();
 //todo:fix that below capability
 $PAGE->set_pagelayout('admin');
-require_capability('local/add_user:add_user', $context);
+//require_capability('local/add_user:managemessages', $context);
 
 $PAGE->set_url(new moodle_url('/local/add_user/index.php'));
 $PAGE->set_context(\context_system::instance());
@@ -105,9 +105,7 @@ if ($mform->is_cancelled()) {
 
             $form_handle->insert_csv_to_tables($file);
         }
-    } else {
-        echo '<p>Please upload an image first</p>';
-    }
+    } else { }
 
 
 } else {
