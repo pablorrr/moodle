@@ -8,12 +8,10 @@
 */
 class AdminerMdlDesigns {
 	function css() {
-        global $OUTPUT, $PAGE, $CFG;
+        global $OUTPUT, $PAGE;
         $PAGE->set_context(\context_system::instance());
         // print_r($PAGE->theme->css_urls($PAGE));exit;
-        $cssurls = $PAGE->theme->css_urls($PAGE);
-        $cssurls[] = $CFG->wwwroot . '/local/adminer/lib/plugins/additional.css';
-        return $cssurls;
+        return $PAGE->theme->css_urls($PAGE);
 	}
 
 }
