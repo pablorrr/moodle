@@ -55,7 +55,16 @@ $PAGE->set_heading('Main plugin page. Show all users.');
 //
 //
 // ===============
+global $DB;
 
+$users = $DB->get_records('user');
+
+foreach ($users as $user){
+
+    echo $user->firstname.'<br>';
+    echo $user->lastname.'<br>';
+
+}
 
 
 

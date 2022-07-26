@@ -24,8 +24,6 @@
 
 
 //use add_user\form\form_handle;
-
-
 require_once(__DIR__ . '/../../config.php');//zalacznie moodle
 //require_once(__DIR__ . '\classes\form\form.php');
 
