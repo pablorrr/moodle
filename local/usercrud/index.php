@@ -21,8 +21,6 @@
  */
 
 
-
-
 //use add_user\form\form_handle;
 
 
@@ -39,7 +37,6 @@ require_capability('local/usercrud:crudallusers', $context);
 
 $PAGE->set_url(new moodle_url('/local/usercrud/index.php'));
 $PAGE->set_context(\context_system::instance());
-
 
 
 // Setup the page
@@ -59,13 +56,12 @@ global $DB;
 
 $users = $DB->get_records('user');
 
-foreach ($users as $user){
+/*foreach ($users as $user) {
 
-    echo $user->firstname.'<br>';
-    echo $user->lastname.'<br>';
+    echo $user->firstname . '<br>';
+    echo $user->lastname . '<br>';
 
-}
-
+}*/
 
 
 // ===============
@@ -76,5 +72,8 @@ foreach ($users as $user){
 //
 // ===============
 echo $OUTPUT->header();
-echo '<h1>Main page test</h1>';
+
+
+$templatecontext = (object)['users' => array_values($users),];
+echo $OUTPUT->render_from_template('local_usercrud/showuser', $templatecontext);
 echo $OUTPUT->footer();

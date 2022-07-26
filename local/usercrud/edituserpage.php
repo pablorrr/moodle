@@ -65,6 +65,7 @@ $PAGE->set_heading('Edit User Page.');
 //
 // ===============
 echo $OUTPUT->header();
-echo '<h1>Edit User Page</h1>';
+$templatecontext = (object)[];
+echo $OUTPUT->render_from_template('local_usercrud/edituser',$templatecontext);
 echo $OUTPUT->footer();
 
