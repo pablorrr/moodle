@@ -2,7 +2,7 @@
 //https://docs.moodle.org/dev/Access_API
 
 $capabilities = [
-    ' local/user_management:view' => [
+    'local/user_management:view' => [
         'riskbitmask' => RISK_SPAM,
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
@@ -10,7 +10,6 @@ $capabilities = [
             'manager' => CAP_ALLOW,
         ],
     ],
-
     'local/user_management:edit' => [
         'riskbitmask' => RISK_SPAM,
         'captype' => 'write',
@@ -19,7 +18,6 @@ $capabilities = [
             'manager' => CAP_ALLOW,
         ],
     ],
-
 
     'local/user_management:create' => [
         'riskbitmask' => RISK_SPAM,

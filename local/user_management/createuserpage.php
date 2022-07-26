@@ -70,5 +70,5 @@ $PAGE->set_heading('Create User Page.');
 // ===============
 echo $OUTPUT->header();
 $templatecontext = (object)[];
-echo $OUTPUT->render_from_template('local_usercrud/createuser',$templatecontext);
+echo $OUTPUT->render_from_template('local_user_management/createuser',$templatecontext);
 echo $OUTPUT->footer();

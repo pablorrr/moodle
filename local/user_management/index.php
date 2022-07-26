@@ -29,11 +29,11 @@ require_once(__DIR__ . '/../../config.php');//zalacznie moodle
 
 global $CFG, $USER, $DB, $OUTPUT, $PAGE;
 
-require_login();
+//require_login();
 $context = context_system::instance();
-if (!has_capability('local/user_management:view', $context)) {
+/*if (!has_capability('local/user_management:view', $context)) {
     die();
-}
+}*/
 require_capability('local/user_management:view', $context);
 
 /*if (has_capability('mod/folder:managefiles', $context)) {
@@ -70,5 +70,5 @@ $users = $DB->get_records('user');
 // ===============
 echo $OUTPUT->header();
 $templatecontext = (object)['users' => array_values($users),];
-echo $OUTPUT->render_from_template('local_usercrud/showuser', $templatecontext);
+echo $OUTPUT->render_from_template('local_user_management/showuser', $templatecontext);
 echo $OUTPUT->footer();
