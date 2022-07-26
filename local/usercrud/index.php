@@ -34,7 +34,7 @@ global $CFG, $USER, $DB, $OUTPUT, $PAGE;
 //require_login();
 $context = context_system::instance();
 //todo:fix that below capability
-
+//local/usercrud:crudallusers
 require_capability('local/usercrud:crudallusers', $context);
 
 $PAGE->set_url(new moodle_url('/local/usercrud/index.php'));
