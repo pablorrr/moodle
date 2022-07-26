@@ -44,5 +44,3 @@ $string['delete_all_selected'] = 'Delete all selected?';
 $string['bulk_edit'] = 'Bulk Edit';
 $string['bulk_edit_messages'] = 'Bulk edit your messages';
 $string['bulk_edit_successful'] = 'Bulk edit successful!';
-
-
