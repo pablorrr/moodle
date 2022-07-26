@@ -37,7 +37,7 @@ if (!has_capability('local/user_management:create', $context)) {
 }
 require_capability('local/user_management:create', $context);
 
-$PAGE->set_url(new moodle_url('/local/user_management/createuserpage.php'));
+$PAGE->set_url(new moodle_url('/local/user_management/create_user_page.php'));
 $PAGE->set_context(\context_system::instance());
 
 

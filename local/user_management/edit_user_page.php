@@ -19,7 +19,7 @@
  * @author      PablozzzCMP
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-//defined('MOODLE_INTERNAL') || die();
+
 
 //use add_user\form\form_handle;
 require_once(__DIR__ . '/../../config.php');//zalacznie moodle
@@ -35,7 +35,7 @@ if (!has_capability('local/user_management:edit', $context)) {
 }
 require_capability('local/user_management:edit', $context);
 
-$PAGE->set_url(new moodle_url('/local/user_management/edituserpage.php'));
+$PAGE->set_url(new moodle_url('/local/user_management/edit_user_page.php'));
 $PAGE->set_context(\context_system::instance());
 
 

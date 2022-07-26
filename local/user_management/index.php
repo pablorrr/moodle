@@ -23,7 +23,7 @@
 
 //use add_user\form\form_handle;
 
-//defined('MOODLE_INTERNAL') || die();
+
 require_once(__DIR__ . '/../../config.php');//zalacznie moodle
 //require_once(__DIR__ . '\classes\form\form.php');
 
@@ -36,7 +36,6 @@ if (!has_capability('local/user_management:view', $context)) {
 }
 
 require_capability('local/user_management:view', $context);
-
 
 
 $PAGE->set_url(new moodle_url('/local/user_management/index.php'));
@@ -68,6 +67,11 @@ $users = $DB->get_records('user');
 //
 // ===============
 echo $OUTPUT->header();
-$templatecontext = (object)['users' => array_values($users),];
+$templatecontext = (object)[
+    'users' => array_values($users),
+    'showuserurl' => new moodle_url('/local/user_management/index.php'),
+    'edituserurl' => new moodle_url('/local/user_management/edit_user_page.php'),
+    'createuserurl' => new moodle_url('/local/user_management/create_user_page.php'),
+];
 echo $OUTPUT->render_from_template('local_user_management/showuser', $templatecontext);
 echo $OUTPUT->footer();

@@ -24,21 +24,24 @@
     }
 }}
 {{!
-    $templatecontext = editurl, bulkediturl - patrz zanczniki z pliku manage
-
-}}
-{{!
 more  moustache tempalte moodle info following link
 https://moodledev.io/docs/guides/templates/
 }}
 <h1>Show users page from mustache</h1>
+<div class="card mt-2 mb-2">
+    <div class="card-body">
+        <input type="button" class="btn btn-primary" value="create user page"
+               onclick="location.href='{{createuserurl}}'">
+    </div>
+</div>
+<hr>
 {{#users}}
-    <div class="card mt-2 mb-2">{{! messagetype - built in notication.php moodle   }}
+    <div class="card mt-2 mb-2">
         <div class="card-body">
             <p>user firstname : {{firstname}}</p>
-        </div>
-        <div class="card-body">
             <p>user lastname : {{lastname}}</p>
+            <input type="button" class="btn btn-primary" value="Edit user"
+                   onclick="location.href='{{edituserurl}}'">
         </div>
     </div>
 {{/users}}
