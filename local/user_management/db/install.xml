@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/user_management/db" VERSION="2022072600" COMMENT="XMLDB file for Moodle local/user_management"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="local_user_management" COMMENT="Default comment for local_user_management, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>
