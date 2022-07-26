@@ -1,5 +1,6 @@
 <?php
 //https://docs.moodle.org/dev/Access_API
+defined('MOODLE_INTERNAL') || die();
 
 $capabilities = [
     'local/user_management:view' => [

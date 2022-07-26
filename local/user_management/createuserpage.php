@@ -21,11 +21,9 @@
  */
 
 
-
-
 //use add_user\form\form_handle;
 
-
+//defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/../../config.php');//zalacznie moodle
 //require_once(__DIR__ . '\classes\form\form.php');
 
@@ -35,13 +33,12 @@ require_login();
 $context = context_system::instance();
 
 if (!has_capability('local/user_management:create', $context)) {
- die();
+    die();
 }
 require_capability('local/user_management:create', $context);
 
 $PAGE->set_url(new moodle_url('/local/user_management/createuserpage.php'));
 $PAGE->set_context(\context_system::instance());
-
 
 
 // Setup the page
@@ -59,8 +56,6 @@ $PAGE->set_heading('Create User Page.');
 // ===============
 
 
-
-
 // ===============
 //
 //
@@ -70,5 +65,5 @@ $PAGE->set_heading('Create User Page.');
 // ===============
 echo $OUTPUT->header();
 $templatecontext = (object)[];
-echo $OUTPUT->render_from_template('local_user_management/createuser',$templatecontext);
+echo $OUTPUT->render_from_template('local_user_management/createuser', $templatecontext);
 echo $OUTPUT->footer();

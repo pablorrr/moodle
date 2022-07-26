@@ -23,22 +23,21 @@
 
 //use add_user\form\form_handle;
 
-
+//defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/../../config.php');//zalacznie moodle
 //require_once(__DIR__ . '\classes\form\form.php');
 
 global $CFG, $USER, $DB, $OUTPUT, $PAGE;
 
-//require_login();
+require_login();
 $context = context_system::instance();
-/*if (!has_capability('local/user_management:view', $context)) {
+if (!has_capability('local/user_management:view', $context)) {
     die();
-}*/
+}
+
 require_capability('local/user_management:view', $context);
 
-/*if (has_capability('mod/folder:managefiles', $context)) {
-    // Do or display something.
-}*/
+
 
 $PAGE->set_url(new moodle_url('/local/user_management/index.php'));
 $PAGE->set_context(\context_system::instance());

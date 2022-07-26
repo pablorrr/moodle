@@ -19,9 +19,7 @@
  * @author      PablozzzCMP
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-
-
+//defined('MOODLE_INTERNAL') || die();
 
 //use add_user\form\form_handle;
 require_once(__DIR__ . '/../../config.php');//zalacznie moodle
@@ -31,8 +29,7 @@ global $CFG, $USER, $DB, $OUTPUT, $PAGE;
 
 require_login();
 $context = context_system::instance();
-//todo:fix that below capability
-//local/usercrud:crudallusers
+
 if (!has_capability('local/user_management:edit', $context)) {
     die();
 }
@@ -40,7 +37,6 @@ require_capability('local/user_management:edit', $context);
 
 $PAGE->set_url(new moodle_url('/local/user_management/edituserpage.php'));
 $PAGE->set_context(\context_system::instance());
-
 
 
 // Setup the page
@@ -58,8 +54,6 @@ $PAGE->set_heading('Edit User Page.');
 // ===============
 
 
-
-
 // ===============
 //
 //
@@ -69,6 +63,6 @@ $PAGE->set_heading('Edit User Page.');
 // ===============
 echo $OUTPUT->header();
 $templatecontext = (object)[];
-echo $OUTPUT->render_from_template('local_user_management/edituser',$templatecontext);
+echo $OUTPUT->render_from_template('local_user_management/edituser', $templatecontext);
 echo $OUTPUT->footer();
 
