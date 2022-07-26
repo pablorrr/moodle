@@ -37,15 +37,15 @@ $context = context_system::instance();
 //local/usercrud:crudallusers
 require_capability('local/usercrud:crudallusers', $context);
 
-$PAGE->set_url(new moodle_url('/local/usercrud/index.php'));
+$PAGE->set_url(new moodle_url('/local/usercrud/edituserpage.php'));
 $PAGE->set_context(\context_system::instance());
 
 
 
 // Setup the page
 //todo moustache conversion
-$PAGE->set_title('Main plugin page. Show all users.');
-$PAGE->set_heading('Main plugin page. Show all users.');
+$PAGE->set_title('Edit User Page.');
+$PAGE->set_heading('Edit User Page.');
 
 
 // ===============
@@ -67,5 +67,6 @@ $PAGE->set_heading('Main plugin page. Show all users.');
 //
 // ===============
 echo $OUTPUT->header();
-echo '<h1>Main page test</h1>';
+echo '<h1>Edit User Page</h1>';
 echo $OUTPUT->footer();
+
