@@ -74,5 +74,44 @@ $mform = new form(null, $customdata);
 //
 // ===============
 echo $OUTPUT->header();
-echo '<h1>works</h1>';
+// ----------
+// Form Submit Status
+// ----------
+if ($mform->is_cancelled()) {
+    // CANCELLED
+    echo '<h1>Cancelled</h1>';
+    echo '<p>Handle form cancel operation, if cancel button is present on form<p>';
+    echo '<a href="/local/add_user/index.php"><input type="button" value="Try Again" /><a>';
+} else if ($data = $mform->get_data()) {
+
+    // SUCCESS
+    echo '<h1>Success!</h1>';
+    echo '<p>In this case you process validated data. $mform->get_data() returns data posted in form.<p>';
+    echo '<h1>data var</h1>';
+    echo '<pre>';
+
+
+    // ---------
+// Display Managed Files!
+// ---------
+    $fs = get_file_storage();
+
+
+    if ($files = $fs->get_area_files($context->id, 'local_filemanager', 'attachment', '0', 'sortorder', false)) {
+        global $DB;
+        $form_handle = new form_handle();
+        // Look through each file being managed
+        foreach ($files as $file) {
+
+            $form_handle->insert_csv_to_tables($file);
+        }
+    } else { }
+
+
+} else {
+    // FAIL / DEFAULT
+    echo '<h1 style="text-align:center">Display form</h1>';
+    echo '<p>This is the form first display OR "errors"<p>';
+    $mform->display();
+}
 echo $OUTPUT->footer();
