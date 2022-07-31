@@ -28,7 +28,7 @@ require_once($CFG->libdir . '/adminlib.php');
 require_once($CFG->libdir . '/csvlib.class.php');
 
 require_once(__DIR__ . '/locallib.php');
-require_once(__DIR__ . '/user_form.php');
+require_once(__DIR__ . '/classes/user_form.php');
 
 
 $context = context_system::instance();
