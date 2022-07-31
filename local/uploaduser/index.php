@@ -37,8 +37,7 @@ $context = context_system::instance();
 $PAGE->set_url(new moodle_url('/local/uploaduser/index.php'));
 $PAGE->set_context(\context_system::instance());
 
-//$PAGE->set_title(get_string('add_user', 'local_add_user'));
-//$PAGE->set_heading(get_string('add_user', 'local_add_user'));
+//todo check settings page!!!!!!
 
 // Setup the page
 $PAGE->set_title('Send User to DB');

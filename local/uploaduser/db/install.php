@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @package  moodle_local_plugin
- * @copyright 2017, Mohammed Essaid MEZERREG <me@mohessaid.com>
+ * @package  local_uploaduser
+ * @copyright
  * @license MIT
  * @doc
  */
@@ -17,7 +17,7 @@ defined('MOODLE_INTERNAL') || die();
  * @throws ddl_table_missing_exception
  * @throws ddl_exception
  */
-function xmldb_local_add_user_install()
+function xmldb_local_uploaduser_install()
 {//https://docs.moodle.org/dev/XMLDB_creating_new_DDL_functions
     global $DB;
 
