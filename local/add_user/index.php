@@ -20,17 +20,19 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+/**
+ * Njprwd glowny plik boostraopowy wtyczki
+ *
+ *
+ */
 
-
+use add_user\form\form;
+use add_user\form\form_handle;
 
 
 require_once(__DIR__ . '/../../config.php');//zalacznie moodle
-
-require_once($CFG->libdir.'/adminlib.php');
-require_once($CFG->libdir.'/csvlib.class.php');
-require_once($CFG->dirroot.'/'.$CFG->admin.'/tool/uploaduser/locallib.php');
-require_once($CFG->dirroot.'/'.$CFG->admin.'/tool/uploaduser/user_form.php');
-
+require_once(__DIR__ . '\classes\form\form.php');
+require_once(__DIR__ . '\classes\form\form_handle.php');
 global $CFG, $USER, $DB, $OUTPUT, $PAGE;
 
 require_login();
@@ -57,49 +59,13 @@ $PAGE->set_heading('Send User to DB');
 //
 //
 // ===============
-$iid         = optional_param('iid', '', PARAM_INT);
-$previewrows = optional_param('previewrows', 10, PARAM_INT);
 
-core_php_time_limit::raise(60 * 60); // 1 hour should be enough.
-raise_memory_limit(MEMORY_HUGE);
+// Create some options for the file manager
+$filemanageropts = array('subdirs' => 0, 'maxbytes' => '0', 'maxfiles' => 50, 'context' => $context);
+$customdata = array('filemanageropts' => $filemanageropts);
 
-admin_externalpage_setup('tooluploaduser');
-
-$returnurl = new moodle_url('/admin/tool/uploaduser/index.php');
-$bulknurl  = new moodle_url('/admin/user/user_bulk.php');
-
-if (empty($iid)) {
-    $mform1 = new admin_uploaduser_form1();
-
-    if ($formdata = $mform1->get_data()) {
-        $iid = csv_import_reader::get_new_iid('uploaduser');
-        $cir = new csv_import_reader($iid, 'uploaduser');
-
-        $content = $mform1->get_file_content('userfile');
-
-        $readcount = $cir->load_csv_content($content, $formdata->encoding, $formdata->delimiter_name);
-
-        $csvloaderror = $cir->get_error();
-        unset($content);
-
-        if (!is_null($csvloaderror)) {
-            print_error('csvloaderror', '', $returnurl, $csvloaderror);
-        }
-        // Continue to form2.
-
-    } else {
-        echo $OUTPUT->header();
-
-        echo $OUTPUT->heading_with_help(get_string('uploadusers', 'tool_uploaduser'), 'uploadusers', 'tool_uploaduser');
-
-        $mform1->display();
-        echo $OUTPUT->footer();
-        die;
-    }
-} else {
-    $cir = new csv_import_reader($iid, 'uploaduser');
-}
-
+// Create a new form object (found in lib.php)
+$mform = new form(null, $customdata);
 // ===============
 //
 //
@@ -107,6 +73,6 @@ if (empty($iid)) {
 //
 //
 // ===============
-//echo $OUTPUT->header();
-//echo '<h1>works</h1>';
-//echo $OUTPUT->footer();
+echo $OUTPUT->header();
+echo '<h1>works</h1>';
+echo $OUTPUT->footer();
