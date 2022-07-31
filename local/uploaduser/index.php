@@ -31,6 +31,21 @@ require_once(__DIR__ . '/locallib.php');
 require_once(__DIR__ . '/user_form.php');
 
 
+$context = context_system::instance();
+
+
+$PAGE->set_url(new moodle_url('/local/uploaduser/index.php'));
+$PAGE->set_context(\context_system::instance());
+
+//$PAGE->set_title(get_string('add_user', 'local_add_user'));
+//$PAGE->set_heading(get_string('add_user', 'local_add_user'));
+
+// Setup the page
+$PAGE->set_title('Send User to DB');
+$PAGE->set_heading('Send User to DB');
+
+require_capability('local/uploaduser:uploadusers', $context);
+
 
 $iid = optional_param('iid', '', PARAM_INT);
 $previewrows = optional_param('previewrows', 10, PARAM_INT);
@@ -38,7 +53,7 @@ $previewrows = optional_param('previewrows', 10, PARAM_INT);
 core_php_time_limit::raise(60 * 60); // 1 hour should be enough.
 raise_memory_limit(MEMORY_HUGE);
 
-admin_externalpage_setup('tooluploaduser');
+//admin_externalpage_setup('tooluploaduser');
 
 $returnurl = new moodle_url('/local/uploaduser/index.php');
 //$bulknurl = new moodle_url('/admin/user/user_bulk.php');
@@ -72,7 +87,8 @@ if (empty($iid)) {
 
         echo $OUTPUT->header();
         echo '<h1>should work</h1>';
-
+        echo $CFG->libdir . '/adminlib.php';
+        echo $CFG->libdir . '/csvlib.class.php';
 
         echo '<pre>';
         echo '<p>get_data</p>';
@@ -111,7 +127,7 @@ if (empty($iid)) {
     } else {
         echo $OUTPUT->header();
 
-    //    echo $OUTPUT->heading_with_help(get_string('uploadusers', 'tool_uploaduser'), 'uploadusers', 'tool_uploaduser');
+        //    echo $OUTPUT->heading_with_help(get_string('uploadusers', 'tool_uploaduser'), 'uploadusers', 'tool_uploaduser');
 
         $mform1->display();
         echo $OUTPUT->footer();

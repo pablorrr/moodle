@@ -27,13 +27,13 @@ defined('MOODLE_INTERNAL') || die();
 $capabilities = array(
 
     // Allows the user to upload user pictures.
-    'tool/uploaduser:uploaduserpictures' => array(
+    'local/uploaduser:uploadusers' => array(
         'riskbitmask' => RISK_SPAM,
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'manager' => CAP_ALLOW
         ),
-        'clonepermissionsfrom' =>  'moodle/site:uploadusers',
+
     ),
 );
