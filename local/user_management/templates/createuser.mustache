@@ -41,13 +41,52 @@ https://moodledev.io/docs/guides/templates/
                onclick="location.href='{{showuserurl}}'">
     </div>
 </div>
+{{!['username', 'password', 'idnumber', 'firstname', 'lastname', 'middlename', 'lastnamephonetic',
+'firstnamephonetic', 'alternatename', 'email', 'description', 'city', 'country'];}}
 
 <form action="" method="post">
-    <label for="fname">First name:</label><br>
-    <input type="text" id="fname" name="fname" value="John"><br>
-    <label for="lname">Last name:</label><br>
-    <input type="text" id="lname" name="lname" value="Doe"><br><br>
-{{!   <input type="submit" value="Submit">}}
+    <label for="username">username:</label><br>
+    <input type="text" id="username" name="username"><br>
+
+    <label for="password">password:</label><br>
+    <input type="password" id="password" name="password"><br>
+
+    {{!  todo type cnvert into numeric }}
+    <label for="idnumber">idnumber:</label><br>
+    <input type="text" id="idnumber" name="idnumber"><br>
+
+    <label for="firstname">firstname:</label><br>
+    <input type="text" id="firstname" name="firstname"><br>
+
+    <label for="lastname">lastname:</label><br>
+    <input type="text" id="lastname" name="lastname"><br>
+
+    <label for="middlename">middlename:</label><br>
+    <input type="text" id="middlename" name="middlename"><br>
+
+    <label for="lastnamephonetic">lastnamephonetic:</label><br>
+    <input type="text" id="lastnamephonetic" name="lastnamephonetic"><br>
+
+
+    <label for="firstnamephonetic">firstnamephonetic:</label><br>
+    <input type="text" id="firstnamephonetic" name="firstnamephonetic"><br>
+
+    <label for="alternatename">alternatename:</label><br>
+    <input type="text" id="alternatename" name="alternatename"><br>
+
+    <label for="email">email:</label><br>
+    <input type="email" id="email" name="email"><br>
+
+    <label for="description">description:</label><br>
+    <input type="text" id="description" name="description"><br>
+
+    <label for="city">city:</label><br>
+    <input type="text" id="city" name="city"><br>
+
+    <label for="country">country:</label><br>
+    <input type="text" id="country" name="country"><br>
+
+    <input type="submit" value="Submit">
 </form>
 
 <hr>

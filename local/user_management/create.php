@@ -90,7 +90,7 @@ $PAGE->set_heading('Create User Page.');
 
 $username = optional_param('username', 'Jake', PARAM_USERNAME);
 $password = optional_param('password', 'Moodle2012!', PARAM_TEXT);
-$idnumber = optional_param('idnumber', 'idnumbertest1', PARAM_STRINGID);
+$idnumber = optional_param('idnumber', 'idnumbertest1', PARAM_TEXT);
 $firstname = optional_param('firstname', 'First Name User Test 1', PARAM_TEXT);
 $lastname = optional_param('lastname', 'Last Name User Test 1', PARAM_TEXT);
 $middlename = optional_param('middlename', 'Middle Name User Test 1', PARAM_TEXT);
@@ -102,19 +102,9 @@ $description = optional_param('description', 'This is a description for user 1',
 $city = optional_param('city', 'Perth', PARAM_TEXT);
 $country = optional_param('country', 'au', PARAM_TEXT);
 
-/*if ($username && $password && $idnumber && $firstname && $lastname && $middlename
-    && $lastnamephonetic && $firstnamephonetic && $alternatename
-    && $email && $description && $city && $country
-)*/
 
-/*
-$city  = "San Francisco";
-$state = "CA";
-$event = "SIGGRAPH";
 
-$location_vars = array("city", "state","event");
 
-$result = compact($location_vars);*/
 
 
 $location_vars = ['username', 'password', 'idnumber', 'firstname', 'lastname', 'middlename', 'lastnamephonetic',
