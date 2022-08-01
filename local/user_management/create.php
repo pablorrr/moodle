@@ -38,7 +38,6 @@ require_once($CFG->dirroot . '/user/lib.php');//apply moodle user lib
 global $CFG, $USER, $DB, $OUTPUT, $PAGE;
 echo '<pre>';
 
-
 //var_dump($CFG);
 echo '</pre>';
 require_login();
@@ -82,16 +81,30 @@ $city = optional_param('city', 'Perth', PARAM_TEXT);
 $country = optional_param('country', 'au', PARAM_TEXT);
 
 $location_vars = ['username', 'password', 'idnumber', 'firstname', 'lastname', 'middlename', 'lastnamephonetic',
-                  'firstnamephonetic', 'alternatename', 'email', 'description', 'city', 'country'];
+    'firstnamephonetic', 'alternatename', 'email', 'description', 'city', 'country'];
 
 $user = (object)compact($location_vars);
 
-try {
-    user_create_user($user);
-} catch (moodle_exception $e) {
-    echo $e->getMessage() . '<br>';
-
+if (!is_object($user)) {
+    return;
 }
+
+if (isset($_POST['submit'])) {
+
+    try {
+        $user_id = user_create_user($user);
+        if (isset ($user_id) && !empty($user_id)) {
+            $msg = 'user has been added with follow id ' . $user_id;
+        }
+    } catch (moodle_exception $e) {
+        $error = $e->getMessage() . '<br>';
+        $msg = 'no user has been added';
+
+    }
+} else {
+    $msg = 'form has not been sent';
+}
+
 // ===============
 //
 //
@@ -100,11 +113,15 @@ try {
 //
 // ===============
 echo $OUTPUT->header();
-$templatecontext = (object)['showuserurl' => new moodle_url('/local/user_management/index.php'),];
+
+$templatecontext = (object)['showuserurl' => new moodle_url('/local/user_management/index.php'), 'msg' => $msg, 'error' => $error,];
+
 echo $OUTPUT->render_from_template('local_user_management/createuser', $templatecontext);
+
 
 //var_dump($_POST);
 //var_dump($fname);
+//todo form validation, moodle message system create
 
-var_dump($user);
+//var_dump($user);
 echo $OUTPUT->footer();

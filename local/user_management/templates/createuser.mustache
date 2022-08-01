@@ -41,8 +41,27 @@ https://moodledev.io/docs/guides/templates/
                onclick="location.href='{{showuserurl}}'">
     </div>
 </div>
-{{!['username', 'password', 'idnumber', 'firstname', 'lastname', 'middlename', 'lastnamephonetic',
-'firstnamephonetic', 'alternatename', 'email', 'description', 'city', 'country'];}}
+{{! }}
+<hr>
+{{#msg}}
+    <div class="card mt-2 mb-2">
+        <div class="card-body">
+            <p>{{msg}}</p>
+
+        </div>
+    </div>
+{{/msg}}
+
+{{! }}
+<hr>
+{{#error}}
+    <div class="card mt-2 mb-2">
+        <div class="card-body">
+            <p>{{error}}</p>
+
+        </div>
+    </div>
+{{/error}}
 
 <form action="" method="post">
     <label for="username">username:</label><br>
@@ -86,7 +105,8 @@ https://moodledev.io/docs/guides/templates/
     <label for="country">country:</label><br>
     <input type="text" id="country" name="country"><br>
 
-    <input type="submit" value="Submit">
+    <br>
+    <input type="submit" name="submit" value="submit">
 </form>
 
 <hr>
