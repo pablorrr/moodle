@@ -42,7 +42,7 @@ $PAGE->set_context(\context_system::instance());
 // Setup the page
 $PAGE->set_title('Send User to DB');
 $PAGE->set_heading('Send User to DB');
-
+$PAGE->set_pagelayout('standard');
 require_capability('local/uploaduser:uploadusers', $context);
 
 
