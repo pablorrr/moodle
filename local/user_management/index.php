@@ -45,7 +45,7 @@ $PAGE->set_context(\context_system::instance());
 // Setup the page
 //todo moustache conversion
 $PAGE->set_title('Main plugin page. Show all users.');
-$PAGE->set_heading('Main plugin page. Show all users.');
+$PAGE->set_heading('Main plugin page.');
 
 
 // ===============
@@ -70,8 +70,8 @@ echo $OUTPUT->header();
 $templatecontext = (object)[
     'users' => array_values($users),
     'showuserurl' => new moodle_url('/local/user_management/index.php'),
-    'edituserurl' => new moodle_url('/local/user_management/edit_user_page.php'),
-    'createuserurl' => new moodle_url('/local/user_management/create_user_page.php'),
+    'edituserurl' => new moodle_url('/local/user_management/edit.php'),
+    'createuserurl' => new moodle_url('/local/user_management/create.php'),
 ];
 echo $OUTPUT->render_from_template('local_user_management/showuser', $templatecontext);
 echo $OUTPUT->footer();

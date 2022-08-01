@@ -22,8 +22,6 @@
 
 
 //use add_user\form\form_handle;
-
-//defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/../../config.php');//zalacznie moodle
 //require_once(__DIR__ . '\classes\form\form.php');
 
@@ -32,19 +30,19 @@ global $CFG, $USER, $DB, $OUTPUT, $PAGE;
 require_login();
 $context = context_system::instance();
 
-if (!has_capability('local/user_management:create', $context)) {
+if (!has_capability('local/user_management:edit', $context)) {
     die();
 }
-require_capability('local/user_management:create', $context);
+require_capability('local/user_management:edit', $context);
 
-$PAGE->set_url(new moodle_url('/local/user_management/create_user_page.php'));
+$PAGE->set_url(new moodle_url('/local/user_management/edit.php'));
 $PAGE->set_context(\context_system::instance());
 
 
 // Setup the page
 //todo moustache conversion
-$PAGE->set_title('Create User Page.');
-$PAGE->set_heading('Create User Page.');
+$PAGE->set_title('Edit User Page.');
+$PAGE->set_heading('Edit User Page.');
 
 
 // ===============
@@ -64,6 +62,7 @@ $PAGE->set_heading('Create User Page.');
 //
 // ===============
 echo $OUTPUT->header();
-$templatecontext = (object)[];
-echo $OUTPUT->render_from_template('local_user_management/createuser', $templatecontext);
+$templatecontext = (object)[ 'showuserurl' => new moodle_url('/local/user_management/index.php'),];
+echo $OUTPUT->render_from_template('local_user_management/edituser', $templatecontext);
 echo $OUTPUT->footer();
+
