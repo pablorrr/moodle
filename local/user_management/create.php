@@ -54,7 +54,7 @@ $PAGE->set_context(\context_system::instance());
 
 
 // Setup the page
-//todo moustache conversion
+
 $PAGE->set_title('Create User Page.');
 $PAGE->set_heading('Create User Page.');
 
@@ -66,27 +66,6 @@ $PAGE->set_heading('Create User Page.');
 //
 //
 // ===============
-
-/*$user = array('username' => 'usernametest1',
-    'password' => 'Moodle2012!',
-    'idnumber' => 'idnumbertest1',
-    'firstname' => 'First Name User Test 1',
-    'lastname' => 'Last Name User Test 1',
-    'middlename' => 'Middle Name User Test 1',
-    'lastnamephonetic' => '最後のお名前のテスト一号',
-    'firstnamephonetic' => 'お名前のテスト一号',
-    'alternatename' => 'Alternate Name User Test 1',
-    'email' => 'usertest1@email.com',
-    'description' => 'This is a description for user 1',
-    'city' => 'Perth',
-    'country' => 'au');*/
-
-/*try {
-    user_create_user($user);
-} catch (moodle_exception $e) {
-    echo $e->getMessage() . '<br>';
-
-}*/
 
 $username = optional_param('username', 'Jake', PARAM_USERNAME);
 $password = optional_param('password', 'Moodle2012!', PARAM_TEXT);
@@ -102,17 +81,17 @@ $description = optional_param('description', 'This is a description for user 1',
 $city = optional_param('city', 'Perth', PARAM_TEXT);
 $country = optional_param('country', 'au', PARAM_TEXT);
 
-
-
-
-
-
 $location_vars = ['username', 'password', 'idnumber', 'firstname', 'lastname', 'middlename', 'lastnamephonetic',
-         'firstnamephonetic', 'alternatename', 'email', 'description', 'city', 'country'];
+                  'firstnamephonetic', 'alternatename', 'email', 'description', 'city', 'country'];
 
-$user = compact($location_vars);
+$user = (object)compact($location_vars);
 
+try {
+    user_create_user($user);
+} catch (moodle_exception $e) {
+    echo $e->getMessage() . '<br>';
 
+}
 // ===============
 //
 //
@@ -127,5 +106,5 @@ echo $OUTPUT->render_from_template('local_user_management/createuser', $template
 //var_dump($_POST);
 //var_dump($fname);
 
-print_r($user);
+var_dump($user);
 echo $OUTPUT->footer();
