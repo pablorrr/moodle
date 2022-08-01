@@ -20,15 +20,27 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
+// ===============
+//
+//
+// PAGE REQUIRE , SETUP, ACCESS SECURITY
+//
+//
+// ===============
 //use add_user\form\form_handle;
 
-//defined('MOODLE_INTERNAL') || die();
+
 require_once(__DIR__ . '/../../config.php');//zalacznie moodle
 //require_once(__DIR__ . '\classes\form\form.php');
+require_once($CFG->dirroot . '/user/lib.php');//apply moodle form handle lib
+//$CFG->dirroot
 
 global $CFG, $USER, $DB, $OUTPUT, $PAGE;
+echo '<pre>';
 
+
+//var_dump($CFG);
+echo '</pre>';
 require_login();
 $context = context_system::instance();
 
@@ -55,6 +67,13 @@ $PAGE->set_heading('Create User Page.');
 //
 // ===============
 
+$user = array('username' => 'usernametest1', 'password' => 'Moodle2012!', 'idnumber' => 'idnumbertest1', 'firstname' => 'First Name User Test 1', 'lastname' => 'Last Name User Test 1', 'middlename' => 'Middle Name User Test 1', 'lastnamephonetic' => '最後のお名前のテスト一号', 'firstnamephonetic' => 'お名前のテスト一号', 'alternatename' => 'Alternate Name User Test 1', 'email' => 'usertest1@email.com', 'description' => 'This is a description for user 1', 'city' => 'Perth', 'country' => 'au');
+try {
+    user_create_user($user);
+} catch (moodle_exception $e) {
+    echo $e->getMessage() . '<br>';
+
+}
 
 // ===============
 //
@@ -64,6 +83,8 @@ $PAGE->set_heading('Create User Page.');
 //
 // ===============
 echo $OUTPUT->header();
-$templatecontext = (object)[ 'showuserurl' => new moodle_url('/local/user_management/index.php'),];
+$templatecontext = (object)['showuserurl' => new moodle_url('/local/user_management/index.php'),];
 echo $OUTPUT->render_from_template('local_user_management/createuser', $templatecontext);
+echo $CFG->dirroot . '/user/lib.php';
+//user/lib.php
 echo $OUTPUT->footer();

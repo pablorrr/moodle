@@ -57,8 +57,3 @@ $templatecontext = (object)[
 echo $OUTPUT->render_from_template('local_message/manage', $templatecontext);//renderowanie templatki formularza
 
 echo $OUTPUT->footer();
-
-/**
- * njprwd czesc koniec front end
- */
-
