@@ -32,7 +32,7 @@
 
 require_once(__DIR__ . '/../../config.php');//zalacznie moodle
 //require_once(__DIR__ . '\classes\form\form.php');
-require_once($CFG->dirroot . '/user/lib.php');//apply moodle form handle lib
+require_once($CFG->dirroot . '/user/lib.php');//apply moodle user lib
 //$CFG->dirroot
 
 global $CFG, $USER, $DB, $OUTPUT, $PAGE;
@@ -75,6 +75,11 @@ try {
 
 }
 
+$fname = optional_param('fname', 'TEST', PARAM_TEXT);
+$lname = optional_param('lname', null, PARAM_TEXT);
+
+
+
 // ===============
 //
 //
@@ -85,6 +90,6 @@ try {
 echo $OUTPUT->header();
 $templatecontext = (object)['showuserurl' => new moodle_url('/local/user_management/index.php'),];
 echo $OUTPUT->render_from_template('local_user_management/createuser', $templatecontext);
-echo $CFG->dirroot . '/user/lib.php';
-//user/lib.php
+//var_dump($_POST);
+var_dump($fname);
 echo $OUTPUT->footer();
