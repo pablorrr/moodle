@@ -67,17 +67,60 @@ $PAGE->set_heading('Create User Page.');
 //
 // ===============
 
-$user = array('username' => 'usernametest1', 'password' => 'Moodle2012!', 'idnumber' => 'idnumbertest1', 'firstname' => 'First Name User Test 1', 'lastname' => 'Last Name User Test 1', 'middlename' => 'Middle Name User Test 1', 'lastnamephonetic' => '最後のお名前のテスト一号', 'firstnamephonetic' => 'お名前のテスト一号', 'alternatename' => 'Alternate Name User Test 1', 'email' => 'usertest1@email.com', 'description' => 'This is a description for user 1', 'city' => 'Perth', 'country' => 'au');
-try {
+/*$user = array('username' => 'usernametest1',
+    'password' => 'Moodle2012!',
+    'idnumber' => 'idnumbertest1',
+    'firstname' => 'First Name User Test 1',
+    'lastname' => 'Last Name User Test 1',
+    'middlename' => 'Middle Name User Test 1',
+    'lastnamephonetic' => '最後のお名前のテスト一号',
+    'firstnamephonetic' => 'お名前のテスト一号',
+    'alternatename' => 'Alternate Name User Test 1',
+    'email' => 'usertest1@email.com',
+    'description' => 'This is a description for user 1',
+    'city' => 'Perth',
+    'country' => 'au');*/
+
+/*try {
     user_create_user($user);
 } catch (moodle_exception $e) {
     echo $e->getMessage() . '<br>';
 
-}
+}*/
 
-$fname = optional_param('fname', 'TEST', PARAM_TEXT);
-$lname = optional_param('lname', null, PARAM_TEXT);
+$username = optional_param('username', 'Jake', PARAM_USERNAME);
+$password = optional_param('password', 'Moodle2012!', PARAM_TEXT);
+$idnumber = optional_param('idnumber', 'idnumbertest1', PARAM_STRINGID);
+$firstname = optional_param('firstname', 'First Name User Test 1', PARAM_TEXT);
+$lastname = optional_param('lastname', 'Last Name User Test 1', PARAM_TEXT);
+$middlename = optional_param('middlename', 'Middle Name User Test 1', PARAM_TEXT);
+$lastnamephonetic = optional_param('lastnamephonetic', '最後のお名前のテスト一号', PARAM_TEXT);
+$firstnamephonetic = optional_param('firstnamephonetic', '最後のお名前のテスト一号', PARAM_TEXT);
+$alternatename = optional_param('alternatename', 'Alternate Name User Test 1', PARAM_TEXT);
+$email = optional_param('email', 'usertest1@email.com', PARAM_EMAIL);
+$description = optional_param('description', 'This is a description for user 1', PARAM_TEXT);
+$city = optional_param('city', 'Perth', PARAM_TEXT);
+$country = optional_param('country', 'au', PARAM_TEXT);
 
+/*if ($username && $password && $idnumber && $firstname && $lastname && $middlename
+    && $lastnamephonetic && $firstnamephonetic && $alternatename
+    && $email && $description && $city && $country
+)*/
+
+/*
+$city  = "San Francisco";
+$state = "CA";
+$event = "SIGGRAPH";
+
+$location_vars = array("city", "state","event");
+
+$result = compact($location_vars);*/
+
+
+$location_vars = ['username', 'password', 'idnumber', 'firstname', 'lastname', 'middlename', 'lastnamephonetic',
+         'firstnamephonetic', 'alternatename', 'email', 'description', 'city', 'country'];
+
+$user = compact($location_vars);
 
 
 // ===============
@@ -90,6 +133,9 @@ $lname = optional_param('lname', null, PARAM_TEXT);
 echo $OUTPUT->header();
 $templatecontext = (object)['showuserurl' => new moodle_url('/local/user_management/index.php'),];
 echo $OUTPUT->render_from_template('local_user_management/createuser', $templatecontext);
+
 //var_dump($_POST);
-var_dump($fname);
+//var_dump($fname);
+
+print_r($user);
 echo $OUTPUT->footer();
