@@ -57,38 +57,38 @@ $PAGE->set_heading('Edit User Page.');
 /**
  *
  * Test user_update_user.
-
-public function test_user_update_user()
-{
-    global $DB;
-    $this->resetAfterTest();
-    // Create user and modify user profile.
-    $user = $this->getDataGenerator()->create_user();
-    $user->firstname = 'Test';
-    $user->password = 'M00dLe@T';
-    // Update user and capture event.
-    $sink = $this->redirectEvents();
-    user_update_user($user);
-    $events = $sink->get_events();
-    $sink->close();
-    $event = array_pop($events);
-    // Test updated value.
-    $dbuser = $DB->get_record('user', array('id' => $user->id));
-    $this->assertSame($user->firstname, $dbuser->firstname);
-    $this->assertNotSame('M00dLe@T', $dbuser->password);
-    // Test event.
-    $this->assertInstanceOf('\\core\\event\\user_updated', $event);
-    $this->assertSame($user->id, $event->objectid);
-    $this->assertSame('user_updated', $event->get_legacy_eventname());
-    $this->assertEventLegacyData($dbuser, $event);
-    $this->assertEquals(context_user::instance($user->id), $event->get_context());
-    $expectedlogdata = array(SITEID, 'user', 'update', 'view.php?id=' . $user->id, '');
-    $this->assertEventLegacyLogData($expectedlogdata, $event);
-    // Update user with no password update.
-    $password = $user->password = hash_internal_user_password('M00dLe@T');
-    user_update_user($user, false);
-    $dbuser = $DB->get_record('user', array('id' => $user->id));
-    $this->assertSame($password, $dbuser->password);
+ *
+ * public function test_user_update_user()
+ * {
+ * global $DB;
+ * $this->resetAfterTest();
+ * // Create user and modify user profile.
+ * $user = $this->getDataGenerator()->create_user();
+ * $user->firstname = 'Test';
+ * $user->password = 'M00dLe@T';
+ * // Update user and capture event.
+ * $sink = $this->redirectEvents();
+ * user_update_user($user);
+ * $events = $sink->get_events();
+ * $sink->close();
+ * $event = array_pop($events);
+ * // Test updated value.
+ * $dbuser = $DB->get_record('user', array('id' => $user->id));
+ * $this->assertSame($user->firstname, $dbuser->firstname);
+ * $this->assertNotSame('M00dLe@T', $dbuser->password);
+ * // Test event.
+ * $this->assertInstanceOf('\\core\\event\\user_updated', $event);
+ * $this->assertSame($user->id, $event->objectid);
+ * $this->assertSame('user_updated', $event->get_legacy_eventname());
+ * $this->assertEventLegacyData($dbuser, $event);
+ * $this->assertEquals(context_user::instance($user->id), $event->get_context());
+ * $expectedlogdata = array(SITEID, 'user', 'update', 'view.php?id=' . $user->id, '');
+ * $this->assertEventLegacyLogData($expectedlogdata, $event);
+ * // Update user with no password update.
+ * $password = $user->password = hash_internal_user_password('M00dLe@T');
+ * user_update_user($user, false);
+ * $dbuser = $DB->get_record('user', array('id' => $user->id));
+ * $this->assertSame($password, $dbuser->password);
  *
  */
 
@@ -98,6 +98,15 @@ public function test_user_update_user()
 } catch (moodle_exception $e) {
 }*/
 
+global $DB;
+$userID = 2;
+//$DB->get_record('test',array('id'=>5),'name,age');
+$userObj = $DB->get_record('user', array('id' => $userID));
+$userObj->firstname = 'Mike';
+
+//firstname
+
+user_update_user($userObj);
 // ===============
 //
 //
@@ -108,5 +117,7 @@ public function test_user_update_user()
 echo $OUTPUT->header();
 $templatecontext = (object)['showuserurl' => new moodle_url('/local/user_management/index.php'),];
 echo $OUTPUT->render_from_template('local_user_management/edituser', $templatecontext);
+echo '<pre>';
+var_dump($userObj);
+echo '</pre>';
 echo $OUTPUT->footer();
-
