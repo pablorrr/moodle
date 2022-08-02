@@ -54,59 +54,62 @@ $PAGE->set_heading('Edit User Page.');
 //
 // ===============
 
-/**
- *
- * Test user_update_user.
- *
- * public function test_user_update_user()
- * {
- * global $DB;
- * $this->resetAfterTest();
- * // Create user and modify user profile.
- * $user = $this->getDataGenerator()->create_user();
- * $user->firstname = 'Test';
- * $user->password = 'M00dLe@T';
- * // Update user and capture event.
- * $sink = $this->redirectEvents();
- * user_update_user($user);
- * $events = $sink->get_events();
- * $sink->close();
- * $event = array_pop($events);
- * // Test updated value.
- * $dbuser = $DB->get_record('user', array('id' => $user->id));
- * $this->assertSame($user->firstname, $dbuser->firstname);
- * $this->assertNotSame('M00dLe@T', $dbuser->password);
- * // Test event.
- * $this->assertInstanceOf('\\core\\event\\user_updated', $event);
- * $this->assertSame($user->id, $event->objectid);
- * $this->assertSame('user_updated', $event->get_legacy_eventname());
- * $this->assertEventLegacyData($dbuser, $event);
- * $this->assertEquals(context_user::instance($user->id), $event->get_context());
- * $expectedlogdata = array(SITEID, 'user', 'update', 'view.php?id=' . $user->id, '');
- * $this->assertEventLegacyLogData($expectedlogdata, $event);
- * // Update user with no password update.
- * $password = $user->password = hash_internal_user_password('M00dLe@T');
- * user_update_user($user, false);
- * $dbuser = $DB->get_record('user', array('id' => $user->id));
- * $this->assertSame($password, $dbuser->password);
- *
- */
-
-
-/*try {
-    user_update_user();
-} catch (moodle_exception $e) {
-}*/
+//get user id from uri
 $userID = optional_param('userid', null, PARAM_INT);
 
 global $DB;
+//get user obj data within user id - send it to mustache template
+$user = $DB->get_record('user', array('id' => $userID));
 
-$userObj = $DB->get_record('user', array('id' => $userID));
-$userObj->firstname = 'Jehnny';
+//todo add field oranizatinal unit and position
+//prepare user optional param according to form
+$username = optional_param('username', 'Jake', PARAM_USERNAME);
+$password = optional_param('password', 'Moodle2012!', PARAM_TEXT);
+$idnumber = optional_param('idnumber', 'idnumbertest1', PARAM_TEXT);
+$firstname = optional_param('firstname', 'First Name User Test 1', PARAM_TEXT);
+$lastname = optional_param('lastname', 'Last Name User Test 1', PARAM_TEXT);
+$middlename = optional_param('middlename', 'Middle Name User Test 1', PARAM_TEXT);
+$lastnamephonetic = optional_param('lastnamephonetic', '最後のお名前のテスト一号', PARAM_TEXT);
+$firstnamephonetic = optional_param('firstnamephonetic', '最後のお名前のテスト一号', PARAM_TEXT);
+$alternatename = optional_param('alternatename', 'Alternate Name User Test 1', PARAM_TEXT);
+$email = optional_param('email', 'usertest1@email.com', PARAM_EMAIL);
+$description = optional_param('description', 'This is a description for user 1', PARAM_TEXT);
+$city = optional_param('city', 'Perth', PARAM_TEXT);
+$country = optional_param('country', 'au', PARAM_TEXT);
 
-//firstname
 
-user_update_user($userObj);
+if (isset($_POST['submit'])) {
+
+    try {
+        //change user data values according to  form fields
+
+        $user->username = $username;
+        $user->password = $password;
+        $user->idnumber = $idnumber;
+        $user->firstname = $firstname;
+        $user->lastname = $lastname;
+        $user->middlename = $middlename;
+        $user->lastnamephonetic = $lastnamephonetic;
+        $user->firstnamephonetic = $firstnamephonetic;
+        $user->alternatename = $alternatename;
+        $user->email = $email;
+        $user->description = $description;
+        $user->city = $city;
+        $user->country = $country;
+
+        user_update_user($user);
+
+        $msg = 'user has been changed with follow id ' . $userID;
+
+    } catch (moodle_exception $e) {
+        $error = $e->getMessage() . '<br>';
+        $msg = 'no user  data has been changed';
+
+    }
+} else {
+    $msg = 'form has not been sent';
+}
+
 // ===============
 //
 //
@@ -115,12 +118,8 @@ user_update_user($userObj);
 //
 // ===============
 echo $OUTPUT->header();
-$templatecontext = (object)['showuserurl' => new moodle_url('/local/user_management/index.php'),];
+$templatecontext = (object)['showuserurl' => new moodle_url('/local/user_management/index.php'),
+                            'userobj' => $user, 'msg' => $msg, 'error' => $error,];
+
 echo $OUTPUT->render_from_template('local_user_management/edituser', $templatecontext);
-echo '<pre>';
-var_dump($userObj);
-echo '</pre>';
-echo '<pre>';
-var_dump($userID);
-echo '</pre>';
 echo $OUTPUT->footer();
