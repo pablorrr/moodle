@@ -97,12 +97,12 @@ $PAGE->set_heading('Edit User Page.');
     user_update_user();
 } catch (moodle_exception $e) {
 }*/
+$userID = optional_param('userid', null, PARAM_INT);
 
 global $DB;
-$userID = 2;
-//$DB->get_record('test',array('id'=>5),'name,age');
+
 $userObj = $DB->get_record('user', array('id' => $userID));
-$userObj->firstname = 'Mike';
+$userObj->firstname = 'Jehnny';
 
 //firstname
 
@@ -119,5 +119,8 @@ $templatecontext = (object)['showuserurl' => new moodle_url('/local/user_managem
 echo $OUTPUT->render_from_template('local_user_management/edituser', $templatecontext);
 echo '<pre>';
 var_dump($userObj);
+echo '</pre>';
+echo '<pre>';
+var_dump($userID);
 echo '</pre>';
 echo $OUTPUT->footer();

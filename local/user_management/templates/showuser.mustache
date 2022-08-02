@@ -42,7 +42,7 @@ https://moodledev.io/docs/guides/templates/
             <p>user firstname : {{firstname}}</p>
             <p>user lastname : {{lastname}}</p>
             <input type="button" class="btn btn-primary" value="Edit user"
-                   onclick="location.href='{{edituserurl}}'">
+                   onclick="location.href='{{edituserurl}}?userid={{id}}'">
         </div>
     </div>
 {{/users}}
