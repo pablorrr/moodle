@@ -17,7 +17,7 @@
 /**
  * Bulk user registration functions
  *
- * @package    tool
+ * @package    local
  * @subpackage uploaduser
  * @copyright  2004 onwards Martin Dougiamas (http://dougiamas.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -72,7 +72,7 @@ class uu_progress_tracker {
     public function __construct() {
         $this->headers = [
             'status' => get_string('status'),
-            'line' => get_string('uucsvline', 'tool_uploaduser'),
+            'line' => get_string('uucsvline', 'local_uploaduser'),
             'id' => 'ID',
             'username' => get_string('username'),
             'firstname' => get_string('firstname'),
@@ -94,7 +94,7 @@ class uu_progress_tracker {
      */
     public function start() {
         $ci = 0;
-        echo '<table id="uuresults" class="generaltable boxaligncenter flexible-wrap" summary="'.get_string('uploadusersresult', 'tool_uploaduser').'">';
+        echo '<table id="uuresults" class="generaltable boxaligncenter flexible-wrap" summary="'.get_string('uploadusersresult', 'local_uploaduser').'">';
         echo '<tr class="heading r0">';
         foreach ($this->headers as $key => $header) {
             echo '<th class="header c'.$ci++.'" scope="col">'.$header.'</th>';

@@ -23,13 +23,18 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../config.php');//zalacznie moodle
+require_once(__DIR__ . '/../../config.php');
+ global $OUTPUT, $DB, $PAGE, $CFG;
+
 require_once($CFG->libdir . '/adminlib.php');
 require_once($CFG->libdir . '/csvlib.class.php');
 
 require_once(__DIR__ . '/locallib.php');
 require_once(__DIR__ . '/classes/user_form.php');
-
+//todo: zaimplememtuj kLASE PROCESSS!!!! NJPRWD TO ONA zaciaga csv do db!!!!
+//todo: odnadz w klasie process lub gdzie indziej odniesienie do struktury kolumn w tabeli users i ja zmien!!!!
+//todo: podejscie nr 1 implemetcj klasy procces w  formularzu
+//todo in case of fail of 1 podejscie nr2 implementcja drugiego foremularza z uploadusers oraz stopniowe usuwanie redundacji w kodzie
 
 $context = context_system::instance();
 

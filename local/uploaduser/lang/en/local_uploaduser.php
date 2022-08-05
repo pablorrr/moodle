@@ -15,11 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'tool_uploaduser', language 'en', branch 'MOODLE_22_STABLE'
+ * Strings for component 'local_uploaduser', language 'en', branch 'MOODLE_22_STABLE'
  *
- * @package    tool
+ * @package    local
  * @subpackage uploaduser
- * @copyright  2011 Petr Skoda {@link http://skodak.org}
+ *
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
