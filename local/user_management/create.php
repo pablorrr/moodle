@@ -81,7 +81,9 @@ if (isset($_POST['submit'])) {
     try {
         $user_id = user_create_user($user);
         if (isset ($user_id) && !empty($user_id)) {
-            $msg = 'user has been added with follow id ' . $user_id;
+            $msg = $user_id;
+            redirect($CFG->wwwroot . '/local/user_management/index.php', get_string('success_create', 'local_user_management') . $msg);
+
         }
     } catch (moodle_exception $e) {
         $error = $e->getMessage() . '<br>';
