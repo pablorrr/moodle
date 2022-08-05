@@ -21,7 +21,9 @@
  */
 
 
-//use add_user\form\form_handle;
+
+use local_user_management\edit;
+
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->dirroot . '/user/lib.php');//apply moodle user lib
 //require_once(__DIR__ . '\classes\form\form.php');
@@ -63,39 +65,27 @@ $user = $DB->get_record('user', array('id' => $userID));
 
 //todo add field oranizatinal unit and position
 //prepare user optional param according to form
-$username = optional_param('username', 'Jake', PARAM_USERNAME);
-$password = optional_param('password', 'Moodle2012!', PARAM_TEXT);
-$idnumber = optional_param('idnumber', 'idnumbertest1', PARAM_TEXT);
-$firstname = optional_param('firstname', 'First Name User Test 1', PARAM_TEXT);
-$lastname = optional_param('lastname', 'Last Name User Test 1', PARAM_TEXT);
-$middlename = optional_param('middlename', 'Middle Name User Test 1', PARAM_TEXT);
-$lastnamephonetic = optional_param('lastnamephonetic', '最後のお名前のテスト一号', PARAM_TEXT);
-$firstnamephonetic = optional_param('firstnamephonetic', '最後のお名前のテスト一号', PARAM_TEXT);
-$alternatename = optional_param('alternatename', 'Alternate Name User Test 1', PARAM_TEXT);
-$email = optional_param('email', 'usertest1@email.com', PARAM_EMAIL);
-$description = optional_param('description', 'This is a description for user 1', PARAM_TEXT);
-$city = optional_param('city', 'Perth', PARAM_TEXT);
-$country = optional_param('country', 'au', PARAM_TEXT);
 
+$create_vars = new edit();
 
 if (isset($_POST['submit'])) {
 
     try {
         //change user data values according to  form fields
 
-        $user->username = $username;
-        $user->password = $password;
-        $user->idnumber = $idnumber;
-        $user->firstname = $firstname;
-        $user->lastname = $lastname;
-        $user->middlename = $middlename;
-        $user->lastnamephonetic = $lastnamephonetic;
-        $user->firstnamephonetic = $firstnamephonetic;
-        $user->alternatename = $alternatename;
-        $user->email = $email;
-        $user->description = $description;
-        $user->city = $city;
-        $user->country = $country;
+        $user->username = $create_vars->create_vars()['username'];
+        $user->password = $create_vars->create_vars()['password'];
+        $user->idnumber = $create_vars->create_vars()['idnumber'];
+        $user->firstname = $create_vars->create_vars()['firstname'];
+        $user->lastname = $create_vars->create_vars()['lastname'];
+        $user->middlename = $create_vars->create_vars()['middlename'];
+        $user->lastnamephonetic = $create_vars->create_vars()['lastnamephonetic'];
+        $user->firstnamephonetic = $create_vars->create_vars()['firstnamephonetic'];
+        $user->alternatename = $create_vars->create_vars()['alternatename'];
+        $user->email = $create_vars->create_vars()['email'];
+        $user->description = $create_vars->create_vars()['description'];
+        $user->city = $create_vars->create_vars()['city'];
+        $user->country = $create_vars->create_vars()['country'];
 
         user_update_user($user);
 
@@ -119,7 +109,7 @@ if (isset($_POST['submit'])) {
 // ===============
 echo $OUTPUT->header();
 $templatecontext = (object)['showuserurl' => new moodle_url('/local/user_management/index.php'),
-                            'userobj' => $user, 'msg' => $msg, 'error' => $error,];
+    'userobj' => $user, 'msg' => $msg, 'error' => $error,];
 
 echo $OUTPUT->render_from_template('local_user_management/edituser', $templatecontext);
 echo $OUTPUT->footer();
