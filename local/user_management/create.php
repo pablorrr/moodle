@@ -86,12 +86,19 @@ if (isset($_POST['submit'])) {
 
         }
     } catch (moodle_exception $e) {
-        $error = $e->getMessage() . '<br>';
-        $msg = 'no user has been added';
+
+        $error = $e->getMessage();
+        echo get_string('fail_create', 'local_user_management') . '  ' . $error;
+        // $error = $e->getMessage() . '<br>';
+        //  echo get_string('fail_create', 'local_user_management');
+
+        //$msg = 'no user has been added';
 
     }
 } else {
-    $msg = 'form has not been sent';
+    echo get_string('form_fail', 'local_user_management') ;
+
+  //  $msg = 'form has not been sent';
 }
 
 // ===============

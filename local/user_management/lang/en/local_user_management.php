@@ -21,5 +21,6 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['success_create'] = 'The user has been created!!!  ';
-
+$string['success_create'] = 'The user has been created !!! with follow id : ';
+$string['fail_create'] = 'No user has been added ';
+$string['form_fail'] = 'Form has not been sent  ';
