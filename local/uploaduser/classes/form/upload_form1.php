@@ -22,8 +22,20 @@
  * @copyright  2007 Dan Poltawski
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+namespace local_uploaduser\form;
+
+
+use core_text;
+use csv_import_reader;
+use html_writer;
+use moodle_url;
+use moodleform;
 
 defined('MOODLE_INTERNAL') || die();
+
+
+
+global $CFG;
 require_once("$CFG->libdir/formslib.php");
 
 require_once($CFG->dirroot . '/user/editlib.php');
@@ -34,8 +46,10 @@ require_once($CFG->dirroot . '/user/editlib.php');
  * @copyright  2007 Petr Skoda  {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class admin_uploaduser_form1 extends moodleform {
-    function definition () {
+class upload_form1 extends moodleform
+{
+    function definition()
+    {
         $mform = $this->_form;
 
         $mform->addElement('header', 'settingsheader', get_string('upload'));
@@ -62,7 +76,7 @@ class admin_uploaduser_form1 extends moodleform {
         $mform->addElement('select', 'encoding', get_string('encoding', 'tool_uploaduser'), $choices);
         $mform->setDefault('encoding', 'UTF-8');
 
-        $choices = array('10'=>10, '20'=>20, '100'=>100, '1000'=>1000, '100000'=>100000);
+        $choices = array('10' => 10, '20' => 20, '100' => 100, '1000' => 1000, '100000' => 100000);
         $mform->addElement('select', 'previewrows', get_string('rowpreviewnum', 'tool_uploaduser'), $choices);
         $mform->setType('previewrows', PARAM_INT);
 
@@ -74,10 +88,12 @@ class admin_uploaduser_form1 extends moodleform {
      *
      * @return array
      */
-    public function get_form_for_cli() {
-        $elements = array_filter($this->_form->_elements, function($element) {
+    public function get_form_for_cli()
+    {
+        $elements = array_filter($this->_form->_elements, function ($element) {
             return !in_array($element->getName(), ['buttonar', 'userfile', 'previewrows']);
         });
         return [$elements, $this->_form->_defaultValues];
     }
 }
+

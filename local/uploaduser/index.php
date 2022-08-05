@@ -24,6 +24,8 @@
  */
 
 use local_uploaduser\process;
+use local_uploaduser\form\upload_form1;
+use local_uploaduser\form\upload_form2;
 
 require_once(__DIR__ . '/../../config.php');
 global $OUTPUT, $DB, $PAGE, $CFG;
@@ -32,7 +34,7 @@ require_once($CFG->libdir . '/adminlib.php');
 require_once($CFG->libdir . '/csvlib.class.php');
 
 require_once(__DIR__ . '/locallib.php');
-require_once(__DIR__ . '/classes/user_form.php');
+//require_once(__DIR__ . '/classes/user_form.php');
 
 
 //todo: zaimplememtuj kLASE PROCESSS!!!! NJPRWD TO ONA zaciaga csv do db!!!!
@@ -64,24 +66,118 @@ raise_memory_limit(MEMORY_HUGE);
 //admin_externalpage_setup('tooluploaduser');
 
 $returnurl = new moodle_url('/local/uploaduser/index.php');
-//$bulknurl = new moodle_url('/admin/user/user_bulk.php');
+$bulknurl = new moodle_url('/local/uploaduser/user_bulk.php');
+
+
+if (empty($iid)) {
+    $mform1 = new upload_form1();
+
+    if ($formdata = $mform1->get_data()) {
+        $iid = csv_import_reader::get_new_iid('uploaduser');
+        $cir = new csv_import_reader($iid, 'uploaduser');
+
+        $content = $mform1->get_file_content('userfile');
+
+        $readcount = $cir->load_csv_content($content, $formdata->encoding, $formdata->delimiter_name);
+        $csvloaderror = $cir->get_error();
+        unset($content);
+
+        if (!is_null($csvloaderror)) {
+            print_error('csvloaderror', '', $returnurl, $csvloaderror);
+        }
+        // Continue to form2.
+
+    } else {
+        echo $OUTPUT->header();
+
+        echo $OUTPUT->heading_with_help(get_string('uploadusers', 'tool_uploaduser'), 'uploadusers', 'tool_uploaduser');
+
+        $mform1->display();
+        echo $OUTPUT->footer();
+        die;
+    }
+} else {
+    $cir = new csv_import_reader($iid, 'uploaduser');
+}
+
+// Test if columns ok.
+try {
+    $process = new process($cir);
+} catch (coding_exception $e) {
+}
+$filecolumns = $process->get_file_columns();
+
+$mform2 = new upload_form2(null,
+    ['columns' => $filecolumns, 'data' => ['iid' => $iid, 'previewrows' => $previewrows]]);
+
+// If a file has been uploaded, then process it.
+if ($formdata = $mform2->is_cancelled()) {
+    $cir->cleanup(true);
+    redirect($returnurl);
+
+} else if ($formdata = $mform2->get_data()) {
+    // Print the header.
+    echo $OUTPUT->header();
+    echo $OUTPUT->heading(get_string('uploadusersresult', 'tool_uploaduser'));
+
+    $process->set_form_data($formdata);
+    $process->process();
+
+    echo $OUTPUT->box_start('boxwidthnarrow boxaligncenter generalbox', 'uploadresults');
+    echo html_writer::tag('p', join('<br />', $process->get_stats()));
+    echo $OUTPUT->box_end();
+
+    if ($process->get_bulk()) {
+        echo $OUTPUT->continue_button($bulknurl);
+    } else {
+        echo $OUTPUT->continue_button($returnurl);
+    }
+    echo $OUTPUT->footer();
+    die;
+}
+
+// Print the header.
+echo $OUTPUT->header();
+
+echo $OUTPUT->heading(get_string('uploaduserspreview', 'tool_uploaduser'));
+
+// NOTE: this is JUST csv processing preview, we must not prevent import from here if there is something in the file!!
+// this was intended for validation of csv formatting and encoding, not filtering the data!!!!
+// we definitely must not process the whole file!
+
+// Preview table data.
+$table = new \tool_uploaduser\preview($cir, $filecolumns, $previewrows);
+
+echo html_writer::tag('div', html_writer::table($table), ['class' => 'flexible-wrap']);
+
+// Print the form if valid values are available.
+if ($table->get_no_error()) {
+    $mform2->display();
+}
+echo $OUTPUT->footer();
+die;
+
+
+
+
 
 // If a file has been uploaded, then process it.
 
 
-if (empty($iid)) {
+/*if (empty($iid)) {
     $mform = new admin_uploaduser_form1();
 
     $iid = csv_import_reader::get_new_iid('uploaduser');
     $cir = new csv_import_reader($iid, 'uploaduser');
 
+    if ($formdata = $mform->is_cancelled()) {
+        $cir->cleanup(true);
+        redirect($returnurl);
+
+    }
     if ($formdata = $mform->get_data()) {
 
-        if ($formdata = $mform->is_cancelled()) {
-            $cir->cleanup(true);
-            redirect($returnurl);
 
-        }
         $content = $mform->get_file_content('userfile');
         $readcount = $cir->load_csv_content($content, $formdata->encoding, $formdata->delimiter_name);
         $csvloaderror = $cir->get_error();
@@ -143,6 +239,7 @@ if (empty($iid)) {
         //probabaly inser  dtata to db
 
         $process->set_form_data($formdata);
+
         $process->process();
 
         echo $OUTPUT->footer();
@@ -158,4 +255,4 @@ if (empty($iid)) {
     }
 } else {
     $cir = new csv_import_reader($iid, 'uploaduser');
-}
+}*/

@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 
 use context_system;
 
-
+global $CFG;
 require_once($CFG->dirroot.'/user/profile/lib.php');
 require_once($CFG->dirroot.'/user/lib.php');
 require_once($CFG->dirroot.'/group/lib.php');
