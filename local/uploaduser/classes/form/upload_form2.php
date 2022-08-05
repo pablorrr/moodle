@@ -10,6 +10,9 @@ use stdClass;
 
 defined('MOODLE_INTERNAL') || die();
 
+
+require_once("$CFG->libdir/formslib.php");//apply moodle form handle lib
+require_once($CFG->dirroot . '/user/editlib.php');
 class upload_form2 extends moodleform
 {
     /**

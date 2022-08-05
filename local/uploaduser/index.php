@@ -90,7 +90,7 @@ if (empty($iid)) {
     } else {
         echo $OUTPUT->header();
 
-        echo $OUTPUT->heading_with_help(get_string('uploadusers', 'tool_uploaduser'), 'uploadusers', 'tool_uploaduser');
+  //      echo $OUTPUT->heading_with_help(get_string('uploadusers', 'tool_uploaduser'), 'uploadusers', 'tool_uploaduser');
 
         $mform1->display();
         echo $OUTPUT->footer();
@@ -146,7 +146,7 @@ echo $OUTPUT->heading(get_string('uploaduserspreview', 'tool_uploaduser'));
 // we definitely must not process the whole file!
 
 // Preview table data.
-$table = new \tool_uploaduser\preview($cir, $filecolumns, $previewrows);
+$table = new \local_uploaduser\preview($cir, $filecolumns, $previewrows);
 
 echo html_writer::tag('div', html_writer::table($table), ['class' => 'flexible-wrap']);
 
