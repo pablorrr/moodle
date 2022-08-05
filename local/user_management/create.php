@@ -96,9 +96,11 @@ if (isset($_POST['submit'])) {
 
     }
 } else {
-    echo get_string('form_fail', 'local_user_management') ;
 
-  //  $msg = 'form has not been sent';
+    $msg = 'form has not been sent';
+    echo get_string('fail_form', 'local_user_management') . $msg;
+
+
 }
 
 // ===============

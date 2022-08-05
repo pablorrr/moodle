@@ -23,4 +23,4 @@
 
 $string['success_create'] = 'The user has been created !!! with follow id : ';
 $string['fail_create'] = 'No user has been added ';
-$string['form_fail'] = 'Form has not been sent  ';
+$string['fail_form'] = 'Form has not been sent  ';
