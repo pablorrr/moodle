@@ -23,14 +23,18 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_uploaduser\process;
+
 require_once(__DIR__ . '/../../config.php');
- global $OUTPUT, $DB, $PAGE, $CFG;
+global $OUTPUT, $DB, $PAGE, $CFG;
 
 require_once($CFG->libdir . '/adminlib.php');
 require_once($CFG->libdir . '/csvlib.class.php');
 
 require_once(__DIR__ . '/locallib.php');
 require_once(__DIR__ . '/classes/user_form.php');
+
+
 //todo: zaimplememtuj kLASE PROCESSS!!!! NJPRWD TO ONA zaciaga csv do db!!!!
 //todo: odnadz w klasie process lub gdzie indziej odniesienie do struktury kolumn w tabeli users i ja zmien!!!!
 //todo: podejscie nr 1 implemetcj klasy procces w  formularzu
@@ -62,17 +66,24 @@ raise_memory_limit(MEMORY_HUGE);
 $returnurl = new moodle_url('/local/uploaduser/index.php');
 //$bulknurl = new moodle_url('/admin/user/user_bulk.php');
 
+// If a file has been uploaded, then process it.
+
+
 if (empty($iid)) {
-    $mform1 = new admin_uploaduser_form1();
+    $mform = new admin_uploaduser_form1();
 
-    if ($formdata = $mform1->get_data()) {
-        $iid = csv_import_reader::get_new_iid('uploaduser');
-        $cir = new csv_import_reader($iid, 'uploaduser');
+    $iid = csv_import_reader::get_new_iid('uploaduser');
+    $cir = new csv_import_reader($iid, 'uploaduser');
 
-        $content = $mform1->get_file_content('userfile');
+    if ($formdata = $mform->get_data()) {
 
+        if ($formdata = $mform->is_cancelled()) {
+            $cir->cleanup(true);
+            redirect($returnurl);
+
+        }
+        $content = $mform->get_file_content('userfile');
         $readcount = $cir->load_csv_content($content, $formdata->encoding, $formdata->delimiter_name);
-
         $csvloaderror = $cir->get_error();
 
 
@@ -125,6 +136,14 @@ if (empty($iid)) {
 
         echo '</pre>';
 
+// Test if columns ok.
+        $process = new process($cir);
+        $filecolumns = $process->get_file_columns();
+
+        //probabaly inser  dtata to db
+
+        $process->set_form_data($formdata);
+        $process->process();
 
         echo $OUTPUT->footer();
 
@@ -133,7 +152,7 @@ if (empty($iid)) {
 
         //    echo $OUTPUT->heading_with_help(get_string('uploadusers', 'tool_uploaduser'), 'uploadusers', 'tool_uploaduser');
 
-        $mform1->display();
+        $mform->display();
         echo $OUTPUT->footer();
         die;
     }
