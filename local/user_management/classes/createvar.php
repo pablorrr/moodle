@@ -1,7 +1,7 @@
 <?php
 namespace local_user_management;
 
-class edit
+class createvar
 {
      public function create_vars(){
 

@@ -22,7 +22,7 @@
 
 
 
-use local_user_management\edit;
+use local_user_management\createvar;
 
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->dirroot . '/user/lib.php');//apply moodle user lib
@@ -66,7 +66,7 @@ $user = $DB->get_record('user', array('id' => $userID));
 //todo add field oranizatinal unit and position
 //prepare user optional param according to form
 
-$create_vars = new edit();
+$create_vars = new createvar();
 
 if (isset($_POST['submit'])) {
 
