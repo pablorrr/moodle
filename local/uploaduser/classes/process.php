@@ -137,6 +137,23 @@ class process {
     }
 
     /**
+     * @param bool $differentorder
+     * @return string[]
+     * method taken from :
+     * \core_user\fields::get_name_fields()
+     * and customized
+     */
+    public static function get_name_fields(bool $differentorder = false): array {
+        $fields = ['firstnamephonetic', 'lastnamephonetic', 'middlename', 'alternatename',
+            'firstname', 'lastname','position_id', 'organizational_unit_id', 'employee_number' ];
+        if ($differentorder) {
+            return array_merge(array_slice($fields, -2), array_slice($fields, 0, -2));
+        } else {
+            return $fields;
+        }
+    }
+
+    /**
      * Standard user fields.
      */
     protected function find_standard_fields(): void {
@@ -152,11 +169,12 @@ class process {
             'deleted',     // 1 means delete user
             'mnethostid',  // Can not be used for adding, updating or deleting of users - only for enrolments,
                            // groups, cohorts and suspending.
-            'interests','position_id', 'organizational_unit_id', 'employee_number',
+            'interests',
         );
         // Include all name fields.
-        $this->standardfields = array_merge($this->standardfields, \core_user\fields::get_name_fields());
+        $this->standardfields = array_merge($this->standardfields, static::get_name_fields());
     }
+
 
     /**
      * Profile fields

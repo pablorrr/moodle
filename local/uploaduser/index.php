@@ -68,7 +68,9 @@ raise_memory_limit(MEMORY_HUGE);
 $returnurl = new moodle_url('/local/uploaduser/index.php');
 $bulknurl = new moodle_url('/local/uploaduser/user_bulk.php');
 
-
+/**
+ * form no 1 laduje csv do pamieci
+ */
 if (empty($iid)) {
     $mform1 = new upload_form1();
 
@@ -90,7 +92,7 @@ if (empty($iid)) {
     } else {
         echo $OUTPUT->header();
 
-  //      echo $OUTPUT->heading_with_help(get_string('uploadusers', 'tool_uploaduser'), 'uploadusers', 'tool_uploaduser');
+        //      echo $OUTPUT->heading_with_help(get_string('uploadusers', 'tool_uploaduser'), 'uploadusers', 'tool_uploaduser');
 
         $mform1->display();
         echo $OUTPUT->footer();
@@ -104,9 +106,14 @@ if (empty($iid)) {
 try {
     $process = new process($cir);
 } catch (coding_exception $e) {
+    echo $e->getMessage() . 'proccess instatance error';
 }
 $filecolumns = $process->get_file_columns();
 
+
+/**
+ * form no 2 laduje dane z csv do tabeli user
+ */
 $mform2 = new upload_form2(null,
     ['columns' => $filecolumns, 'data' => ['iid' => $iid, 'previewrows' => $previewrows]]);
 
@@ -118,10 +125,13 @@ if ($formdata = $mform2->is_cancelled()) {
 } else if ($formdata = $mform2->get_data()) {
     // Print the header.
     echo $OUTPUT->header();
-    echo $OUTPUT->heading(get_string('uploadusersresult', 'tool_uploaduser'));
+    echo $OUTPUT->heading(get_string('uploadusersresult', 'local_uploaduser'));
 
+    var_dump($formdata);
     $process->set_form_data($formdata);
+
     $process->process();
+
 
     echo $OUTPUT->box_start('boxwidthnarrow boxaligncenter generalbox', 'uploadresults');
     echo html_writer::tag('p', join('<br />', $process->get_stats()));
