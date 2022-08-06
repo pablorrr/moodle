@@ -57,7 +57,7 @@ class field_value_validators {
         // Validate if user themes are allowed.
         if (!$CFG->allowuserthemes) {
             $status = 'warning';
-            $message = get_string('userthemesnotallowed', 'tool_uploaduser');
+            $message = get_string('userthemesnotallowed', 'local_uploaduser');
         } else {
             // Cache list of themes if not yet set.
             if (!isset(self::$themescache)) {
@@ -67,10 +67,10 @@ class field_value_validators {
             // Check if we have a valid theme.
             if (empty($value)) {
                 $status = 'warning';
-                $message = get_string('notheme', 'tool_uploaduser');
+                $message = get_string('notheme', 'local_uploaduser');
             } else if (!isset(self::$themescache[$value])) {
                 $status = 'warning';
-                $message = get_string('invalidtheme', 'tool_uploaduser', s($value));
+                $message = get_string('invalidtheme', 'local_uploaduser', s($value));
             }
         }
 

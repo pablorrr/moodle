@@ -39,7 +39,7 @@ require_once($CFG->dirroot.'/local/uploaduser/locallib.php');
 /**
  * Process CSV file with users data, this will create/update users, enrol them into courses, etc
  *
- * @package     tool_uploaduser
+ * @package     local_uploaduser
  * @copyright   2020 Moodle
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -152,7 +152,7 @@ class process {
             'deleted',     // 1 means delete user
             'mnethostid',  // Can not be used for adding, updating or deleting of users - only for enrolments,
                            // groups, cohorts and suspending.
-            'interests',
+            'interests','position_id', 'organizational_unit_id', 'employee_number',
         );
         // Include all name fields.
         $this->standardfields = array_merge($this->standardfields, \core_user\fields::get_name_fields());
@@ -186,7 +186,7 @@ class process {
      */
     public function get_file_columns(): array {
         if ($this->filecolumns === null) {
-            $returnurl = new \moodle_url('/admin/tool/uploaduser/index.php');
+            $returnurl = new \moodle_url('/local/uploaduser/index.php');
             $this->filecolumns = uu_validate_user_upload_columns($this->cir,
                 $this->standardfields, $this->profilefields, $returnurl);
         }
@@ -465,7 +465,7 @@ class process {
 
         } else {
             if (!$existinguser or $this->get_operation_type() == UU_USER_ADDINC) {
-                $this->upt->track('status', get_string('errormnetadd', 'tool_uploaduser'), 'error');
+                $this->upt->track('status', get_string('errormnetadd', 'local_uploaduser'), 'error');
                 $this->userserrors++;
                 return;
             }
@@ -564,7 +564,7 @@ class process {
                     return;
                 }
                 if (delete_user($existinguser)) {
-                    $this->upt->track('status', get_string('userdeleted', 'tool_uploaduser'));
+                    $this->upt->track('status', get_string('userdeleted', 'local_uploaduser'));
                     $this->deletes++;
                 } else {
                     $this->upt->track('status', get_string('usernotdeletederror', 'error'), 'error');
@@ -617,7 +617,7 @@ class process {
                 $DB->set_field('user', 'username', $user->username, ['id' => $olduser->id]);
                 $this->upt->track('username', '', 'normal', false); // Clear previous.
                 $this->upt->track('username', s($oldusername).'-->'.s($user->username), 'info');
-                $this->upt->track('status', get_string('userrenamed', 'tool_uploaduser'));
+                $this->upt->track('status', get_string('userrenamed', 'local_uploaduser'));
                 $this->renames++;
             } else {
                 $this->upt->track('status', get_string('usernotrenamedmissing', 'error'), 'error');
@@ -849,7 +849,7 @@ class process {
                 // We want only users that were really updated.
                 user_update_user($existinguser, false, false);
 
-                $this->upt->track('status', get_string('useraccountupdated', 'tool_uploaduser'));
+                $this->upt->track('status', get_string('useraccountupdated', 'local_uploaduser'));
                 $this->usersupdated++;
 
                 if (!$remoteuser) {
@@ -870,7 +870,7 @@ class process {
 
             } else {
                 // No user information changed.
-                $this->upt->track('status', get_string('useraccountuptodate', 'tool_uploaduser'));
+                $this->upt->track('status', get_string('useraccountuptodate', 'local_uploaduser'));
                 $this->usersuptodate++;
 
                 if ($this->get_bulk() == UU_BULK_ALL) {
@@ -952,7 +952,7 @@ class process {
                     if ($this->get_create_paswords()) {
                         $user->password = 'to be generated';
                         $this->upt->track('password', '', 'normal', false);
-                        $this->upt->track('password', get_string('uupasswordcron', 'tool_uploaduser'), 'warning', false);
+                        $this->upt->track('password', get_string('uupasswordcron', 'local_uploaduser'), 'warning', false);
                     } else {
                         $this->upt->track('password', '', 'normal', false);
                         $this->upt->track('password', get_string('missingfield', 'error', 'password'), 'error');
@@ -1094,13 +1094,13 @@ class process {
                         if (user_has_role_assignment($user->id, $sysroleid, SYSCONTEXTID)) {
                             role_unassign($sysroleid, $user->id, SYSCONTEXTID);
                             $this->upt->track('enrolments', get_string('unassignedsysrole',
-                                'tool_uploaduser', $this->sysrolecache[$sysroleid]->name), 'info');
+                                'local_uploaduser', $this->sysrolecache[$sysroleid]->name), 'info');
                         }
                     } else {
                         if (!user_has_role_assignment($user->id, $sysroleid, SYSCONTEXTID)) {
                             role_assign($sysroleid, $user->id, SYSCONTEXTID);
                             $this->upt->track('enrolments', get_string('assignedsysrole',
-                                'tool_uploaduser', $this->sysrolecache[$sysroleid]->name), 'info');
+                                'local_uploaduser', $this->sysrolecache[$sysroleid]->name), 'info');
                         }
                     }
                 }
@@ -1292,7 +1292,7 @@ class process {
             }
         }
         if (($invalid = \core_user::validate($user)) !== true) {
-            $this->upt->track('status', get_string('invaliduserdata', 'tool_uploaduser', s($user->username)), 'warning');
+            $this->upt->track('status', get_string('invaliduserdata', 'local_uploaduser', s($user->username)), 'warning');
         }
     }
 
@@ -1305,24 +1305,24 @@ class process {
         $lines = [];
 
         if ($this->get_operation_type() != UU_USER_UPDATE) {
-            $lines[] = get_string('userscreated', 'tool_uploaduser').': '.$this->usersnew;
+            $lines[] = get_string('userscreated', 'local_uploaduser').': '.$this->usersnew;
         }
         if ($this->get_operation_type() == UU_USER_UPDATE or $this->get_operation_type() == UU_USER_ADD_UPDATE) {
-            $lines[] = get_string('usersupdated', 'tool_uploaduser').': '.$this->usersupdated;
+            $lines[] = get_string('usersupdated', 'local_uploaduser').': '.$this->usersupdated;
         }
         if ($this->get_allow_deletes()) {
-            $lines[] = get_string('usersdeleted', 'tool_uploaduser').': '.$this->deletes;
-            $lines[] = get_string('deleteerrors', 'tool_uploaduser').': '.$this->deleteerrors;
+            $lines[] = get_string('usersdeleted', 'local_uploaduser').': '.$this->deletes;
+            $lines[] = get_string('deleteerrors', 'local_uploaduser').': '.$this->deleteerrors;
         }
         if ($this->get_allow_renames()) {
-            $lines[] = get_string('usersrenamed', 'tool_uploaduser').': '.$this->renames;
-            $lines[] = get_string('renameerrors', 'tool_uploaduser').': '.$this->renameerrors;
+            $lines[] = get_string('usersrenamed', 'local_uploaduser').': '.$this->renames;
+            $lines[] = get_string('renameerrors', 'local_uploaduser').': '.$this->renameerrors;
         }
         if ($usersskipped = $this->usersskipped) {
-            $lines[] = get_string('usersskipped', 'tool_uploaduser').': '.$usersskipped;
+            $lines[] = get_string('usersskipped', 'local_uploaduser').': '.$usersskipped;
         }
-        $lines[] = get_string('usersweakpassword', 'tool_uploaduser').': '.$this->weakpasswords;
-        $lines[] = get_string('errors', 'tool_uploaduser').': '.$this->userserrors;
+        $lines[] = get_string('usersweakpassword', 'local_uploaduser').': '.$this->weakpasswords;
+        $lines[] = get_string('errors', 'local_uploaduser').': '.$this->userserrors;
 
         return $lines;
     }
