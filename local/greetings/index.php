@@ -19,8 +19,12 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_greetings\form\message_form;
+
 require_once('../../config.php');
-require_once($CFG->dirroot. '/local/greetings/lib.php');
+require_once($CFG->dirroot . '/local/greetings/lib.php');
+require_once($CFG->libdir . '/formslib.php');
+
 
 global $PAGE, $USER, $OUTPUT;
 
@@ -32,12 +36,17 @@ $PAGE->set_heading(get_string('pluginname', 'local_greetings'));
 $PAGE->set_title('Greetings plugin');
 
 
+$messageform = new message_form();
+
+
 echo $OUTPUT->header();
 if (isloggedin()) {
     //  echo '<h2>Greetings, ' . fullname($USER) . '</h2>';
-   // echo get_string('greetingloggedinuser', 'local_greetings', fullname($USER));
+    // echo get_string('greetingloggedinuser', 'local_greetings', fullname($USER));
     echo local_greetings_get_greeting($USER);
 } else {
     echo '<h2>Greetings, user</h2>';
 }
+
+$messageform->display();
 echo $OUTPUT->footer();
