@@ -20,6 +20,9 @@
  */
 
 require_once('../../config.php');
+
+global $PAGE, $USER, $OUTPUT;
+
 $context = context_system::instance();
 $PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/local/greetings/index.php'));
@@ -28,11 +31,10 @@ $PAGE->set_heading(get_string('pluginname', 'local_greetings'));
 $PAGE->set_title('Greetings plugin');
 
 
-
-
 echo $OUTPUT->header();
 if (isloggedin()) {
-    echo '<h2>Greetings, ' . fullname($USER) . '</h2>';
+    //  echo '<h2>Greetings, ' . fullname($USER) . '</h2>';
+    echo get_string('greetingloggedinuser', 'local_greetings', fullname($USER));
 } else {
     echo '<h2>Greetings, user</h2>';
 }
