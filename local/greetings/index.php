@@ -21,12 +21,25 @@
 
 use local_greetings\form\message_form;
 
+// ===============
+//
+//
+// PAGE REQUIREMENTS
+//
+//
+// ===============
 require_once('../../config.php');
 require_once($CFG->dirroot . '/local/greetings/lib.php');
 require_once($CFG->libdir . '/formslib.php');
 
-
-global $PAGE, $USER, $OUTPUT;
+// ===============
+//
+//
+// PAGE SETTINGS
+//
+//
+// ===============
+global $PAGE, $USER, $OUTPUT, $DB;
 
 $context = context_system::instance();
 $PAGE->set_context($context);
@@ -35,10 +48,34 @@ $PAGE->set_pagelayout('standard');
 $PAGE->set_heading(get_string('pluginname', 'local_greetings'));
 $PAGE->set_title('Greetings plugin');
 
-
+// ===============
+//
+//
+// PAGE LOGIC
+//
+//
+// ===============
 $messageform = new message_form();
 
+if ($data = $messageform->get_data()) {
+    $message = required_param('message', PARAM_TEXT);
 
+    if (!empty($message)) {
+        $record = new stdClass;
+        $record->message = $message;
+        $record->timecreated = time();
+
+        $DB->insert_record('local_greetings_messages', $record);
+    }
+}
+
+// ===============
+//
+//
+// PAGE OUTPUT
+//
+//
+// ===============
 echo $OUTPUT->header();
 if (isloggedin()) {
     //  echo '<h2>Greetings, ' . fullname($USER) . '</h2>';
@@ -50,11 +87,13 @@ if (isloggedin()) {
 
 $messageform->display();
 
-if ($data = $messageform->get_data()) {
+/*if ($data = $messageform->get_data()) {
     var_dump($data);
 
     $message = required_param('message', PARAM_TEXT);
 
     echo $OUTPUT->heading($message, 4);
-}
+}*/
+
+
 echo $OUTPUT->footer();
