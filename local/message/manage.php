@@ -55,5 +55,10 @@ $templatecontext = (object)[
 ];
 // ponizej wsk na sciezke oraz zmienna z jakiej ma byc rendrerowana tyresc front end wtyczki
 echo $OUTPUT->render_from_template('local_message/manage', $templatecontext);//renderowanie templatki formularza
+$url = new moodle_url('/local/message/pdf/example.pdf');
+//$CFG->wwwroot;
 
+echo '<a href="' . $url . '">test pdf</a>';
+
+echo '<a href="' . $CFG->wwwroot . '">test root url</a>';
 echo $OUTPUT->footer();
