@@ -19,8 +19,14 @@ class createvar
          $city = optional_param('city', 'Perth', PARAM_TEXT);
          $country = optional_param('country', 'au', PARAM_TEXT);
 
+         $employee_number = optional_param('employee_number', '45', PARAM_INT);
+
+         $organizational_unit_id = optional_param('organizational_unit_id', '45', PARAM_INT);
+
+         $position_id = optional_param('position_id', '45', PARAM_INT);
+
          $location_vars = ['username', 'password', 'idnumber', 'firstname', 'lastname', 'middlename', 'lastnamephonetic',
-             'firstnamephonetic', 'alternatename', 'email', 'description', 'city', 'country'];
+             'firstnamephonetic', 'alternatename', 'email', 'description', 'city', 'country','employee_number','organizational_unit_id','position_id'];
 
          return compact($location_vars);
      }

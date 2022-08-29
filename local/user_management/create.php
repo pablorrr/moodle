@@ -33,9 +33,9 @@
 use local_user_management\createvar;
 
 require_once(__DIR__ . '/../../config.php');//zalacznie moodle
-//require_once(__DIR__ . '\classes\form\form.php');
+
 require_once($CFG->dirroot . '/user/lib.php');//apply moodle user lib
-//$CFG->dirroot
+
 
 global $CFG, $USER, $DB, $OUTPUT, $PAGE;
 echo '<pre>';
@@ -76,10 +76,34 @@ if (!is_object($user)) {
     return;
 }
 
+global $DB;
+
+$users = $DB->get_records('user');
+
+
+//$users_name_arr = [];
+foreach ($users as $single_user) {
+    array_push($users_name_arr, $single_user->username);
+
+}
+
+//var_dump( $users);
+
+
 if (isset($_POST['submit'])) {
 
+
     try {
+
+        $username = optional_param('username', 'Jake', PARAM_USERNAME);
+        if (in_array($username, $users_name_arr)) {
+
+            $info = 'nazwa uzytkonika musi byc unikatowa';
+            return;
+        }
+
         $user_id = user_create_user($user);
+
         if (isset ($user_id) && !empty($user_id)) {
             $msg = $user_id;
             redirect($CFG->wwwroot . '/local/user_management/index.php', get_string('success_create', 'local_user_management') . $msg);
@@ -88,11 +112,16 @@ if (isset($_POST['submit'])) {
     } catch (moodle_exception $e) {
 
         $error = $e->getMessage();
-        echo get_string('fail_create', 'local_user_management') . '  ' . $error;
-        // $error = $e->getMessage() . '<br>';
-        //  echo get_string('fail_create', 'local_user_management');
 
-        //$msg = 'no user has been added';
+
+        echo get_string('fail_create', 'local_user_management') . '  ' . $error . '<br>';
+
+        if (!empty($info)) {
+            echo get_string('fail_username', 'local_user_management') . '  ' . $info . '<br>';
+        }
+
+
+
 
     }
 } else {
@@ -112,7 +141,8 @@ if (isset($_POST['submit'])) {
 // ===============
 echo $OUTPUT->header();
 
-$templatecontext = (object)['showuserurl' => new moodle_url('/local/user_management/index.php'), 'msg' => $msg, 'error' => $error,];
+$templatecontext = (object)['showuserurl' => new moodle_url('/local/user_management/index.php'),
+    'msg' => $msg, 'error' => $error, 'info' => $info,];
 
 echo $OUTPUT->render_from_template('local_user_management/createuser', $templatecontext);
 

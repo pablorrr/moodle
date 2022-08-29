@@ -21,11 +21,10 @@
  */
 
 
-//use add_user\form\form_handle;
 
 
 require_once(__DIR__ . '/../../config.php');//zalacznie moodle
-//require_once(__DIR__ . '\classes\form\form.php');
+
 
 global $CFG, $USER, $DB, $OUTPUT, $PAGE;
 
@@ -59,6 +58,7 @@ global $DB;
 
 $users = $DB->get_records('user');
 
+
 // ===============
 //
 //
@@ -67,11 +67,20 @@ $users = $DB->get_records('user');
 //
 // ===============
 echo $OUTPUT->header();
+
+
+
+// echo $employee_number->employee_number;
+
 $templatecontext = (object)[
     'users' => array_values($users),
     'showuserurl' => new moodle_url('/local/user_management/index.php'),
     'edituserurl' => new moodle_url('/local/user_management/edit.php'),
     'createuserurl' => new moodle_url('/local/user_management/create.php'),
+
+
 ];
 echo $OUTPUT->render_from_template('local_user_management/showuser', $templatecontext);
+
+
 echo $OUTPUT->footer();

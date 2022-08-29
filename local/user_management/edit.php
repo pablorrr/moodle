@@ -60,8 +60,11 @@ $PAGE->set_heading('Edit User Page.');
 $userID = optional_param('userid', null, PARAM_INT);
 
 global $DB;
+
+
 //get user obj data within user id - send it to mustache template
 $user = $DB->get_record('user', array('id' => $userID));
+
 
 //todo add field oranizatinal unit and position
 //prepare user optional param according to form
@@ -87,6 +90,14 @@ if (isset($_POST['submit'])) {
         $user->city = $create_vars->create_vars()['city'];
         $user->country = $create_vars->create_vars()['country'];
 
+        $user->employee_number = $create_vars->create_vars()['employee_number'];
+
+
+        $user->organizational_unit_id = $create_vars->create_vars()['organizational_unit_id'];
+
+        $user->position_id = $create_vars->create_vars()['position_id'];
+
+
         user_update_user($user);
 
         $msg = 'user has been changed with follow id ' . $userID;
@@ -108,6 +119,9 @@ if (isset($_POST['submit'])) {
 //
 // ===============
 echo $OUTPUT->header();
+var_dump($user->employee_number);
+
+
 $templatecontext = (object)['showuserurl' => new moodle_url('/local/user_management/index.php'),
     'userobj' => $user, 'msg' => $msg, 'error' => $error,];
 

@@ -61,48 +61,37 @@ https://moodledev.io/docs/guides/templates/
     </div>
 
     <form action="" method="post">
-        <label for="username">username:</label><br>
-        <input type="text" id="username" name="username" value="{{username}}"><br>
 
-        <label for="password">password:</label><br>
-        <input type="password" id="password" name="password" value="{{password}}"><br>
+        <label for="username">username:</label><br>
+        <input type="text" id="username" name="username" value="{{username}}" required ><br>
 
         {{!  todo type cnvert into numeric }}
         <label for="idnumber">idnumber:</label><br>
-        <input type="text" id="idnumber" name="idnumber" value="{{idnumber}}"><br>
+        <input type="text" id="idnumber" name="idnumber" value="{{idnumber}}" required ><br>
 
         <label for="firstname">firstname:</label><br>
-        <input type="text" id="firstname" name="firstname" value="{{firstname}}"><br>
+        <input type="text" id="firstname" name="firstname" value="{{firstname}}" require><br>
+
 
         <label for="lastname">lastname:</label><br>
-        <input type="text" id="lastname" name="lastname" value="{{lastname}}"><br>
+        <input type="text" id="lastname" name="lastname" value="{{lastname}}"  required><br>
 
-        <label for="middlename">middlename:</label><br>
-        <input type="text" id="middlename" name="middlename" value="{{middlename}}"><br>
+        {{! numer osobowy pracownika}}
+        <label for="employee_number">employee number:</label><br>
+         <input type="text" id="employee_number" name="employee_number" value="{{employee_number}}"  required ><br>
 
-        <label for="lastnamephonetic">lastnamephonetic:</label><br>
-        <input type="text" id="lastnamephonetic" name="lastnamephonetic" value="{{lastnamephonetic}}"><br>
+          {{! nazwa jednostki}}
+          <label for="organizational_unit_id">organizational unit:</label><br>
+          <input type="text" id="organizational_unit_id" name="organizational_unit_id" value="{{organizational_unit_id}}"  required><br>
 
-
-        <label for="firstnamephonetic">firstnamephonetic:</label><br>
-        <input type="text" id="firstnamephonetic" name="firstnamephonetic" value="{{firstnamephonetic}}"><br>
-
-        <label for="alternatename">alternatename:</label><br>
-        <input type="text" id="alternatename" name="alternatename" value="{{alternatename}}"><br>
+           {{! nazwa stanowiska}}
+                    <label for="position_id">position name </label><br>
+                    <input type="text" id="position_id" name="position_id" value="{{position_id}}"  required><br>
 
         <label for="email">email:</label><br>
-        <input type="email" id="email" name="email" value="{{email}}"><br>
+        <input type="email" id="email" name="email" value="{{email}}" required ><br>
 
-        <label for="description">description:</label><br>
-        <input type="text" id="description" name="description" value="{{description}}"><br>
-
-        <label for="city">city:</label><br>
-        <input type="text" id="city" name="city" value="{{city}}"><br>
-
-        <label for="country">country:</label><br>
-        <input type="text" id="country" name="country" value="{{country}}"><br>
-
-        <br>
+       <br>
         <input type="submit" name="submit" value="submit">
     </form>
 {{/userobj}}

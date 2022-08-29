@@ -37,7 +37,7 @@ https://moodledev.io/docs/guides/templates/
                onclick="location.href='{{showuserurl}}'">
     </div>
 </div>
-{{! }}
+
 <hr>
 {{#msg}}
     <div class="card mt-2 mb-2">
@@ -47,6 +47,15 @@ https://moodledev.io/docs/guides/templates/
         </div>
     </div>
 {{/msg}}
+
+{{#info}}
+    <div class="card mt-2 mb-2">
+        <div class="card-body">
+            <p>{{info}}</p>
+
+        </div>
+    </div>
+{{/info}}
 
 {{! }}
 <hr>
@@ -61,45 +70,35 @@ https://moodledev.io/docs/guides/templates/
 
 <form action="" method="post">
     <label for="username">username:</label><br>
-    <input type="text" id="username" name="username"><br>
+    <input type="text" id="username" name="username" required ><br>
 
-    <label for="password">password:</label><br>
-    <input type="password" id="password" name="password"><br>
 
-    {{!  todo type cnvert into numeric }}
-    <label for="idnumber">idnumber:</label><br>
-    <input type="text" id="idnumber" name="idnumber"><br>
+
+   <label for="idnumber">idnumber:</label><br>
+    <input type="text" id="idnumber" name="idnumber" required ><br>
 
     <label for="firstname">firstname:</label><br>
-    <input type="text" id="firstname" name="firstname"><br>
+    <input type="text" id="firstname" name="firstname"  required  ><br>
 
     <label for="lastname">lastname:</label><br>
-    <input type="text" id="lastname" name="lastname"><br>
+    <input type="text" id="lastname" name="lastname"  required ><br>
 
-    <label for="middlename">middlename:</label><br>
-    <input type="text" id="middlename" name="middlename"><br>
-
-    <label for="lastnamephonetic">lastnamephonetic:</label><br>
-    <input type="text" id="lastnamephonetic" name="lastnamephonetic"><br>
-
-
-    <label for="firstnamephonetic">firstnamephonetic:</label><br>
-    <input type="text" id="firstnamephonetic" name="firstnamephonetic"><br>
-
-    <label for="alternatename">alternatename:</label><br>
-    <input type="text" id="alternatename" name="alternatename"><br>
 
     <label for="email">email:</label><br>
-    <input type="email" id="email" name="email"><br>
+    <input type="email" id="email" name="email"  required ><br>
 
-    <label for="description">description:</label><br>
-    <input type="text" id="description" name="description"><br>
+     {{! numer osobowy pracownika}}
 
-    <label for="city">city:</label><br>
-    <input type="text" id="city" name="city"><br>
+     <label for="employee_number">employee number:</label><br>
+     <input type="text" id="employee_number" name="employee_number" required ><br>
 
-    <label for="country">country:</label><br>
-    <input type="text" id="country" name="country"><br>
+      {{! nazwa jednostki}}
+      <label for="organizational_unit_id">organizational unit:</label><br>
+      <input type="text" id="organizational_unit_id" name="organizational_unit_id" required><br>
+
+     {{! nazwa stanowiska}}
+      <label for="position_id">position name </label><br>
+      <input type="text" id="position_id" name="position_id" required><br>
 
     <br>
     <input type="submit" name="submit" value="submit">
