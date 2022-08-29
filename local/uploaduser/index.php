@@ -21,7 +21,7 @@
 
 use local_uploaduser\form\form_handle;
 use local_uploaduser\form\form;
-
+use local_uploaduser\helper;
 
 
 // ===============
@@ -31,6 +31,8 @@ use local_uploaduser\form\form;
 //
 //
 // ===============
+
+global $PAGE, $USER, $OUTPUT, $DB, $CFG;
 require_once('../../config.php');
 
 require_once($CFG->libdir . '/formslib.php');
@@ -42,7 +44,7 @@ require_once($CFG->libdir . '/formslib.php');
 //
 //
 // ===============
-global $PAGE, $USER, $OUTPUT, $DB;
+
 
 $context = context_system::instance();
 $PAGE->set_context($context);
@@ -51,7 +53,7 @@ $PAGE->set_pagelayout('standard');
 //$PAGE->set_heading(get_string('pluginname', 'local_greetings'));
 $PAGE->set_title('uploaduser plugin');
 require_login();
-//require_capability('local/uploaduser:uploaduser', $context);
+require_capability('local/uploaduser:uploaduser', $context);
 
 // ===============
 //
@@ -66,12 +68,12 @@ if ($data = $form->get_data()) {
 
     $content = $form->get_file_content('userfile');
 
-    var_dump($content);
-
     $form_handle = new form_handle();
     if (isset ($content)) {
-        var_dump($content);
+
         $form_handle->insert_csv_to_tables($content);
+        $form_handle->insert_user_orgunit_id();
+        $form_handle->insert_user_pos_id();
     }
 }
 
@@ -83,7 +85,6 @@ if ($data = $form->get_data()) {
 //
 // ===============
 echo $OUTPUT->header();
-
 
 $form->display();
 

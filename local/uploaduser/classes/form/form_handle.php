@@ -3,10 +3,12 @@
 namespace local_uploaduser\form;
 
 use dml_exception;
+use stdClass;
 
 class form_handle
 {
     public $db;
+
 
     public function __construct()
     {
@@ -88,7 +90,7 @@ class form_handle
 
     public function insert_csv_to_tables($content)
     {
-      //  $get_content = $single_file->get_content();
+        //  $get_content = $single_file->get_content();
         $enoflinestring = str_replace("\n", 'endOfLine', trim($content));
 
         $arr = explode('endOfLine', $enoflinestring);
@@ -109,6 +111,14 @@ class form_handle
         foreach ($arr as $item) {
             $object_arr[] = (object)array_combine($keys_arr, explode(',', $item));
         }
+
+        $this->count_arr_el = count($object_arr);
+
+        //  $count_arr_el= count($object_arr);
+        // echo '<pre>';
+        // var_dump($count_arr_el);
+        //   echo '</pre>';
+
         //cloning objects to specify which object is sending as parameter to given table name at insert method
         foreach ($object_arr as $clon) {
             if (is_object($clon)) {
@@ -144,7 +154,6 @@ class form_handle
 
         } else {
             $this->insert_data_to_user_table($user_object_arr);
-
         }
 
 
@@ -198,4 +207,55 @@ class form_handle
 
         $this->insert_data_to_organizational_unit_table($organizational_unit_object_arr);
     }
+
+
+    public function insert_user_pos_id()
+    {
+        //odnajdz usera z najwyzszym id -ostatniego
+        $sql = 'SELECT `id` FROM `mdl_user` WHERE `id` = (SELECT MAX(`id`) FROM `mdl_user`)';
+        $user_id = $this->db->get_record_sql($sql);
+
+        //zbierz wszytskie id z tabeli position
+        $position = $this->db->get_records('position');
+
+
+        //rewers  tablicy by id  buyly odpwiednio dopasowane
+        $reversed_pos = array_reverse($position);
+        //update kolumny
+        foreach ($reversed_pos as $pos_id) {
+
+            $user = new stdClass();
+            $user->id = $user_id->id;
+            $user->position_id = $pos_id->id;
+
+            $this->db->update_record('user', $user);
+            $user_id->id--;
+        }
+
+    }
+
+    public function insert_user_orgunit_id()
+    {
+        //odnajdz usera z najwyzszym id -ostatniego
+        $sql = 'SELECT `id` FROM `mdl_user` WHERE `id` = (SELECT MAX(`id`) FROM `mdl_user`)';
+        $user_id = $this->db->get_record_sql($sql);
+
+        //zbierz wszytskie id z tabeli position
+        $organizational_unit = $this->db->get_records('organizational_unit');
+
+        //rewers  tablicy by id  buyly odpwiednio dopasowane
+        $reversed_org = array_reverse($organizational_unit);
+        //update kolumny
+        foreach ($reversed_org as $unit_id) {
+
+            $user = new stdClass();
+            $user->id = $user_id->id;
+            $user->organizational_unit_id = $unit_id->id;
+
+            $this->db->update_record('user', $user);
+            $user_id->id--;
+        }
+
+    }
+
 }
