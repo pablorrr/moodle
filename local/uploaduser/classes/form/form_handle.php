@@ -3,12 +3,13 @@
 namespace local_uploaduser\form;
 
 use dml_exception;
+use Exception;
 use stdClass;
 
 class form_handle
 {
     public $db;
-
+    public $error;
 
     public function __construct()
     {
@@ -90,7 +91,7 @@ class form_handle
 
     public function insert_csv_to_tables($content)
     {
-        //  $get_content = $single_file->get_content();
+
         $enoflinestring = str_replace("\n", 'endOfLine', trim($content));
 
         $arr = explode('endOfLine', $enoflinestring);
@@ -101,23 +102,52 @@ class form_handle
 
         //cut off header from the array - seprate content of array from keys name(as future column names)
         array_shift($arr);
-        //  var_dump($arr);
+        echo '<pre>';
+        //    print_r($arr);
+        echo '</pre>';
+//create temporary array
+        echo '<pre>';
+        $temp_array = $arr;
+
+        $func = function ($value) {
+            return array_values(explode(',', $value));
+        };
+
+        $temp_array = array_map($func, $temp_array);
+
+        // print_r($temp_array);
+
+
+       // print_r($arr);
+
+
+        echo '</pre>';
+
+
         //additional values to array to setup fields in table which cant be default
         foreach ($arr as $key => $value) {
             $arr[$key] = $value . ',description,imagealt,lastnamephonetic,firstnamephonetic,middlename,alternatename,moodlenetprofile';
         }
 
         //create  array of objects
+        //todo njprwd array combine zwoci blad przy gdy bedzie problem przy przypisywaniu kluczy do wartosci - oznacza to niewlasciwy format - DO WYKORZYTSANIA PRZY WALIDACJI!!
         foreach ($arr as $item) {
-            $object_arr[] = (object)array_combine($keys_arr, explode(',', $item));
+            try {
+                $array_combine = array_combine($keys_arr, explode(',', $item));
+            } catch (Exception $e) {
+                echo 'Message: ' . $e->getMessage();
+            }
+            /**walidacja ogolna czy  poprawny format csv liczba kolumn musi odpowiaddac ilisc przyporzadkowanych wartosci**/
+            //sprawdz opreacaja array combine powiodla sie - dopasowanie iloscin kluczy do wartosci
+            if (!is_array($array_combine) && !$array_combine) {
+                $this->error = 'format CSV nieprawidlowy';
+                echo $this->error;
+                return;
+            }
+            $object_arr[] = (object)$array_combine;
         }
 
-        $this->count_arr_el = count($object_arr);
-
-        //  $count_arr_el= count($object_arr);
-        // echo '<pre>';
-        // var_dump($count_arr_el);
-        //   echo '</pre>';
+      //  print_r($arr);
 
         //cloning objects to specify which object is sending as parameter to given table name at insert method
         foreach ($object_arr as $clon) {
@@ -144,13 +174,42 @@ class form_handle
             $multi_arr[] = $arr;
         }
 
-        // var_dump($multi_arr);
 
-        $username_arr = array_column($multi_arr, 'username');
+        //get username from our csv file
+        $username_arr_csv = array_column($multi_arr, 'username');
 
-        if (count($username_arr) !== count(array_unique($username_arr))) {
+
+        /** check if username is empty**/
+        if (empty($username_arr_csv)) {
+            echo '<h1>brak nazw uzytkownikow w pliku!!!</h1>';
+            return;
+        }
+
+
+
+        //todo return testowe do usniecia!!!!
+        return;
+
+
+        /** check if username is unique**/
+        //get username from user table
+        $users = $this->db->get_records('user');
+
+        $user_names_arr_db = [];
+        foreach ($users as $user) {
+            array_push($user_names_arr_db, $user->username);
+        }
+
+        //print_r($user_names_arr);
+        //compares two arrays of usernames to check if username is unique
+        //jesli result pusty oznacza ze nie ma powtorzen
+
+        $result = array_intersect($user_names_arr_db, $username_arr_csv);
+
+        if (is_array($result) && !empty ($result)) {
 
             echo '<h1>usernames must be different !!!</h1>';
+            return;
 
         } else {
             $this->insert_data_to_user_table($user_object_arr);

@@ -62,20 +62,23 @@ require_capability('local/uploaduser:uploaduser', $context);
 //
 //
 // ===============
-$form = new form();
+/*$form = new form();
 
 if ($data = $form->get_data()) {
 
     $content = $form->get_file_content('userfile');
 
-    $form_handle = new form_handle();
-    if (isset ($content)) {
 
-        $form_handle->insert_csv_to_tables($content);
-        $form_handle->insert_user_orgunit_id();
-        $form_handle->insert_user_pos_id();
-    }
-}
+
+    $form_handle = new form_handle();
+     if (isset ($content)) {
+
+      $form_handle->insert_csv_to_tables($content);
+
+      $form_handle->insert_user_orgunit_id();
+     $form_handle->insert_user_pos_id();
+     }
+}*/
 
 // ===============
 //
@@ -86,7 +89,31 @@ if ($data = $form->get_data()) {
 // ===============
 echo $OUTPUT->header();
 
+
+$form = new form();
+
+if ($data = $form->get_data()) {
+
+    $content = $form->get_file_content('userfile');
+
+    $form_handle = new form_handle();
+    if (isset ($content)) {
+
+        $form_handle->insert_csv_to_tables($content);
+
+        $form_handle->insert_user_orgunit_id();
+        $form_handle->insert_user_pos_id();
+    }
+}
+
+
+
+
+
 $form->display();
+//echo '<pre>';
+//print_r($data);
+//echo '</pre>';
 
 
 echo $OUTPUT->footer();
